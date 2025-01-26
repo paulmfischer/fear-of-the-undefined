@@ -1,0 +1,10 @@
+# hidden files
+.*
+!.git*
+!.editorconfig
+
+# bundler cache
+_site
+_cache
+_vendor
+

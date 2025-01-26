@@ -1,0 +1,94 @@
+@import "styles/code.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a > span:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+#post-content {
+  pre, img {
+    margin-block: 1.25rem;
+  }
+
+  p {
+    margin-block: 1rem;
+  }
+
+  blockquote {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    border-left: 5px solid theme('colors.sky.400');
+    font-style: italic;
+    background-color: theme('colors.zinc.300');
+  }
+
+  code:not(.hljs) {
+    color: theme('colors.sky.400');
+  }
+
+  a {
+    color: theme('colors.blue.600');
+  }
+}
+
+.dark {
+  #post-content {
+    blockquote {
+      border-left: 5px solid theme('colors.sky.200');
+      background-color: theme('colors.zinc.800');
+    }
+
+    code:not(.hljs) {
+      color: theme('colors.sky.300');
+    }
+
+    a {
+      color: theme('colors.blue.400');
+    }
+  }
+}
+
+:root {
+  --pagefind-ui-scale: 1;
+  --pagefind-ui-border-width: 2px;
+  --pagefind-ui-border-radius: 8px;
+  --pagefind-ui-image-border-radius: 8px;
+  --pagefind-ui-image-box-ratio: 3 / 2;
+  --pagefind-ui-font: sans-serif;
+  --pagefind-ui-primary: theme('colors.white');
+  --pagefind-ui-text: theme('colors.zinc.800');
+  --pagefind-ui-background: theme('colors.white');
+  --pagefind-ui-border: theme('colors.zinc.800');
+
+  .pagefind-ui__result-link {
+    color: theme('colors.blue.600') !important;
+  }
+}
+
+:root.dark {
+  --pagefind-ui-primary: theme('colors.zinc.800');
+  --pagefind-ui-text: theme('colors.white');
+  --pagefind-ui-background: theme('colors.zinc.800');
+  --pagefind-ui-border: theme('colors.zinc.800');
+  --pagefind-ui-tag: theme('colors.slate.300');
+
+  .pagefind-ui__result-link {
+    color: theme('colors.blue.400') !important;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  :root {
+    --pagefind-ui-scale: 0.8;
+  }
+}
