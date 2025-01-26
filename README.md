@@ -5,8 +5,8 @@ Things can change here and quickly sometimes, all just depends on what is going 
 That itch currently is to use a static site generator to build out my blog post and host it with [Deno Deploy](https://deno.com/deploy).  I am currently doing that using [Lume](https://lume.land/) which also lets me utilize [Deno](https://deno.com/) to write components for my blog as well as write all my posts in Markdown.
 
 #### Previous blog engines used
-Before March 2024: 
-- [Jekyll](https://jekyllrb.com/) 
+Before March 2024:
+- [Jekyll](https://jekyllrb.com/)
   - I used [Chirpy](https://github.com/cotes2020/chirpy-starter) as a starting point to using Jekyll.
   - This worked well and I liked the theme/layout that Chirpy gave me so I tried to replicate it as much as possible with my current redesign.  The problem is that Jekyll uses Ruby and I am not really a Ruby developer so I didn't like digging around or changing things much.
 
