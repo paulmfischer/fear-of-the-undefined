@@ -23,9 +23,9 @@ export default (data: Lume.Data, helpers: Lume.Helpers) => {
       <a href={emailHref} aria-label="email" target="_blank" rel="noopener">
         <FontAwesomeIcon icon={faEnvelope} className="w-12 h-12 lg:w-5 lg:h-5 dark:text-slate-400" />
       </a>
-      {/* <a href="/posts.rss" aria-label="rss" target="_blank" rel="noopener">
+      <a href="/posts.rss" aria-label="rss" target="_blank" rel="noopener">
         <FontAwesomeIcon icon={faRss} className="w-12 h-12 lg:w-5 lg:h-5 dark:text-slate-400" />
-      </a> */}
+      </a>
     </div>
   );
 };
