@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from 'npm:@fortawesome/react-fontawesome';
-import { faEnvelope, faSun, faMoon } from 'npm:@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faSun, faMoon, faRss } from 'npm:@fortawesome/free-solid-svg-icons';
 import { faGithub, faMastodon, faLinkedin } from 'npm:@fortawesome/free-brands-svg-icons';
 
 export default (data: Lume.Data, helpers: Lume.Helpers) => {
@@ -22,6 +22,9 @@ export default (data: Lume.Data, helpers: Lume.Helpers) => {
       </a>
       <a href={emailHref} aria-label="email" target="_blank" rel="noopener">
         <FontAwesomeIcon icon={faEnvelope} className="w-12 h-12 lg:w-5 lg:h-5 dark:text-slate-400" />
+      </a>
+      <a href="/posts.rss" aria-label="rss" target="_blank" rel="noopener">
+        <FontAwesomeIcon icon={faRss} className="w-12 h-12 lg:w-5 lg:h-5 dark:text-slate-400" />
       </a>
     </div>
   );

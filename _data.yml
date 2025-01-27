@@ -1,5 +1,6 @@
 layout: layouts/main.tsx
 siteTitle: "Fear of the 'undefined'"
+siteDescription: "My thoughts, experiences, and 'fun' issues I encounter on my journey as a developer."
 author: Paul Fischer
 github: https://github.com/paulmfischer
 email: me@paulmfischer.dev
