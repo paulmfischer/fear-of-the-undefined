@@ -46,10 +46,13 @@ site.use(feed({
   info: {
     title: siteOptions.title,
     description: siteOptions.description,
+    authorName: siteOptions.author,
+    authorUrl: siteOptions.baseUrl,
   },
   items: {
     title: "=title",
     description: "$#post-content > div > p:first-child",
+    authorName: siteOptions.author,
   },
 }));
 site.use(sitemap());
