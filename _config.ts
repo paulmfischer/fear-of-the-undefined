@@ -36,7 +36,19 @@ site.data("navLinks", [{
 site.use(nav());
 site.use(date());
 site.use(readInfo());
-site.use(feed());
+site.use(feed({
+  output: ["/posts.rss", "/posts.json"],
+  query: "post",
+  limit: 10,
+  info: {
+    title: "$#siteTitle",
+    description: "$#siteDescription",
+  },
+  items: {
+    title: "=title",
+    description: "$#post-content > div > p:first-child",
+  },
+}));
 site.use(sitemap());
 
 site.use(code_highlight({
