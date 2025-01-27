@@ -12,8 +12,11 @@ import pagefind from "lume/plugins/pagefind.ts";
 import readInfo from "lume/plugins/reading_info.ts";
 
 import lang_csharp from "npm:highlight.js/lib/languages/csharp";
+import { siteOptions } from "./consts.ts";
 
-const site = lume();
+const site = lume({
+  location: new URL(siteOptions.baseUrl),
+});
 
 site.ignore('README.md');
 site.copy("assets");
@@ -41,8 +44,8 @@ site.use(feed({
   query: "post",
   limit: 10,
   info: {
-    title: "$#siteTitle",
-    description: "$#siteDescription",
+    title: siteOptions.title,
+    description: siteOptions.description,
   },
   items: {
     title: "=title",
