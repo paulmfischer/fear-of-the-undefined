@@ -7,7 +7,6 @@ import tailwindcss from "lume/plugins/tailwindcss.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import postcss from "lume/plugins/postcss.ts";
 import date from "lume/plugins/date.ts";
-import nav from "lume/plugins/nav.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import readInfo from "lume/plugins/reading_info.ts";
 
@@ -36,7 +35,6 @@ site.data("navLinks", [{
 site.use(favicon({
   input: "/assets/img/avatar-150x150.png",
 }));
-site.use(nav());
 site.use(date());
 site.use(readInfo());
 site.use(feed({
@@ -59,8 +57,12 @@ site.use(sitemap());
 
 site.use(code_highlight({
   languages: {
-      csharp: lang_csharp,
-    },
+    csharp: lang_csharp,
+  },
+  theme: {
+    name: "monokai-sublime",
+    cssFile: "/code-styles.css",
+  }
 }));
 site.use(jsx());
 site.use(tailwindcss({

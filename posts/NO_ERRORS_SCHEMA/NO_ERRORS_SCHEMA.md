@@ -29,6 +29,7 @@ describe('AppComponent', () => {
       imports: [AppComponent],
     }).compileComponents();
   });
+});
 ```
 
 Typically you would fix this error by adding the component or module to the tests `TestBed.configureTestingModule` setup like so
@@ -39,6 +40,7 @@ describe('AppComponent', () => {
       imports: [AppComponent, ProfileComponent],
     }).compileComponents();
   });
+});
 ```
 or if the component lives in another module
 ```typescript
@@ -48,6 +50,7 @@ describe('AppComponent', () => {
       imports: [AppComponent, ProfileModule],
     }).compileComponents();
   });
+});
 ```
 The main problem with this, is that you need to add an import for every component or module for every component that would be rendered down the render path, not just direct descendants.  So you testing module setup can become massive at times!
 
@@ -60,12 +63,13 @@ describe('AppComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
+});
 ```
-So what is `NO_ERRORS_SCHEMA` doing here? Well if we look at the [API documentation](https://angular.io/api/core/NO_ERRORS_SCHEMA){.text-blue-600 .dark:text-blue-400} it tells us that
+So what is `NO_ERRORS_SCHEMA` doing here? Well if we look at the [API documentation](https://angular.io/api/core/NO_ERRORS_SCHEMA) it tells us that
 > This schema allows you to ignore the errors related to any unknown elements or properties in a template. The usage of this schema is generally discouraged because it prevents useful validation and may hide real errors in your template. Consider using the CUSTOM_ELEMENTS_SCHEMA instead.
 
 Now when you run your tests, Angular will no longer throw an `...is not a known element` error.  But there is a bit more going on here, when Angular encounters an unknown element, it will render the element as an empty tag and move on.  So it allows you to write `shallow` component tests which is super powerful if you want your tests to only focus on the component in question and not all the child components it utilizes.
 
-Keep in mind that using `NO_ERRORS_SCHEMA` does have some trade-offs as listed in the [Developer Guide](https://angular.io/guide/testing-components-scenarios#no_errors_schema){.text-blue-600 .dark:text-blue-400}. One of those trades-offs is
+Keep in mind that using `NO_ERRORS_SCHEMA` does have some trade-offs as listed in the [Developer Guide](https://angular.io/guide/testing-components-scenarios#no_errors_schema). One of those trades-offs is
 > The NO_ERRORS_SCHEMA also prevents the compiler from telling you about the missing components and attributes that you omitted inadvertently or misspelled. You could waste hours chasing phantom bugs that the compiler would have caught in an instant.
 which could lead to some headaches if you rely on the test framework to validate all your changes.
