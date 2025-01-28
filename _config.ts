@@ -66,15 +66,15 @@ site.use(code_highlight({
   }
 }));
 site.use(jsx());
-site.use(tailwindcss({
-  options: {
-    darkMode: 'selector',
-  }
-}));
 site.use(inline());
 site.use(pagefind({
   ui: {
     resetStyles: true,
+  }
+}));
+site.use(tailwindcss({
+  options: {
+    darkMode: 'selector',
   }
 }));
 site.use(postcss());
