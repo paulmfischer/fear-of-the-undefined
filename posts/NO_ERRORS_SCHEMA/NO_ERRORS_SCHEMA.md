@@ -10,7 +10,7 @@ tags:
   - testing
 ---
 Have you ever been working on an Angular project and you are running tests and you get the following error:
-![known-element-error](known-element-error.png)
+![known-element-error](known-element-error.png){inline}
 This error is Angular telling you that for that specific test, it found an element in the template that it doesn't know about. Instead of trying to render the element, it throws an error.  This error is due to the test module setup not including an import for that component or module that contains the unknown element.
 
 For the example error above, this is what my `app.component.html` file looks like (parts removed for brevity)
