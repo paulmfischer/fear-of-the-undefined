@@ -9,6 +9,7 @@ import postcss from "lume/plugins/postcss.ts";
 import date from "lume/plugins/date.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import readInfo from "lume/plugins/reading_info.ts";
+import inline from "lume/plugins/inline.ts";
 
 import lang_csharp from "npm:highlight.js/lib/languages/csharp";
 import { siteOptions } from "./consts.ts";
@@ -65,14 +66,15 @@ site.use(code_highlight({
   }
 }));
 site.use(jsx());
-site.use(tailwindcss({
-  options: {
-    darkMode: 'selector',
-  }
-}));
+site.use(inline());
 site.use(pagefind({
   ui: {
     resetStyles: true,
+  }
+}));
+site.use(tailwindcss({
+  options: {
+    darkMode: 'selector',
   }
 }));
 site.use(postcss());
