@@ -1,5 +1,3 @@
-@import "styles/code.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,13 +24,13 @@ a > span:hover {
   blockquote {
     padding: 10px 20px;
     margin: 0 0 20px;
-    border-left: 5px solid theme('colors.sky.400');
+    border-left: 5px solid theme('colors.cyan.600');
     font-style: italic;
     background-color: theme('colors.zinc.300');
   }
 
   code:not(.hljs) {
-    color: theme('colors.sky.400');
+    color: theme('colors.cyan.600');
   }
 
   a {
@@ -43,12 +41,12 @@ a > span:hover {
 .dark {
   #post-content {
     blockquote {
-      border-left: 5px solid theme('colors.sky.200');
+      border-left: 5px solid theme('colors.cyan.400');
       background-color: theme('colors.zinc.800');
     }
 
     code:not(.hljs) {
-      color: theme('colors.sky.300');
+      color: theme('colors.cyan.400');
     }
 
     a {
@@ -67,7 +65,6 @@ a > span:hover {
   --pagefind-ui-primary: theme('colors.white');
   --pagefind-ui-text: theme('colors.zinc.800');
   --pagefind-ui-background: theme('colors.white');
-  --pagefind-ui-border: theme('colors.zinc.800');
 
   .pagefind-ui__result-link {
     color: theme('colors.blue.600') !important;
