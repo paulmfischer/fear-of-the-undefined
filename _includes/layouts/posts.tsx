@@ -5,7 +5,7 @@ export const layout = "layouts/main.tsx";
 export default ({ title, children, github, author, date, tags, categories, comp }: Lume.Data, { date: helperDate }: Lume.Helpers) => (
   <>
     <div className="">
-      <h2 className="mt-4 mb-3 text-6xl lg:text-3xl dark:text-slate-400">{title}</h2>
+      <h1 className="mt-4 mb-3 text-6xl dark:text-slate-400">{title}</h1>
       <div className="flex flex-row gap-4">
         <comp.metadata dataList={categories} icon={<FontAwesomeIcon icon={faList} />} />
         <comp.metadata dataList={tags.filter((tag) => tag != 'post')} icon={<FontAwesomeIcon icon={faTag} />}></comp.metadata>

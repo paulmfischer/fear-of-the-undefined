@@ -17,6 +17,16 @@ a > span:hover {
     margin-block: 1.25rem;
   }
 
+  h2 {
+    font-size: theme('fontSize.3xl');
+    line-height: theme('lineHeight.9');
+  }
+  
+  h3 {
+    font-size: theme('fontSize.2xl');
+    line-height: theme('lineHeight.8');
+  }
+  
   p {
     margin-block: 1rem;
   }

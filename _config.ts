@@ -62,7 +62,9 @@ site.use(code_highlight({
     csharp: lang_csharp,
   },
   theme: {
-    name: "monokai-sublime",
+    // name: "monokai-sublime",
+    // name: "panda-syntax-dark",
+    name: "androidstudio",
     cssFile: "/code-styles.css",
   }
 }));
