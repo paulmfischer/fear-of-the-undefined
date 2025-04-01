@@ -23,6 +23,7 @@ site.ignore('README.md');
 site.copy("assets");
 site.copy("scripts");
 site.copy("PaulFischerResume.pdf");
+site.copy("serve.ts");
 site.copyRemainingFiles();
 site.data("navLinks", [{
   href: '/',
