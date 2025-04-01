@@ -61,12 +61,12 @@ site.use(code_highlight({
   languages: {
     csharp: lang_csharp,
   },
-  theme: {
-    // name: "monokai-sublime",
-    // name: "panda-syntax-dark",
-    name: "androidstudio",
-    cssFile: "/code-styles.css",
-  }
+  // theme: {
+  //   // name: "monokai-sublime",
+  //   // name: "panda-syntax-dark",
+  //   name: "androidstudio",
+  //   cssFile: "/code-styles.css",
+  // }
 }));
 site.use(jsx());
 site.use(inline());
