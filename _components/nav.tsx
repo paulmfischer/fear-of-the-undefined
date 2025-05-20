@@ -23,7 +23,7 @@ export default (data: Lume.Data, helpers: Lume.Helpers) => {
           </li>
         ))}
       </ul>
-      <div className="test"></div>
+      <div className="test2"></div>
     </nav>
   );
 };
