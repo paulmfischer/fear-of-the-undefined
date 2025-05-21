@@ -1,6 +1,8 @@
 @import "styles/code-highlight.css";
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;

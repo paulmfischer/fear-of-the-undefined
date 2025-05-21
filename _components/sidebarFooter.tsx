@@ -1,7 +1,7 @@
 export default ({ comp, ...data }: Lume.Data, helpers: Lume.Helpers) => {
   const emailHref = 'mailto:' + data.email;
   return (
-    <div className="mt-auto mx-auto mb-9 flex flex-wrap items-center gap-8 lg:gap-4">
+    <div className="mt-auto mx-auto mb-9 flex flex-wrap items-center gap-6 lg:gap-3">
       <button id="toggle-theme" className="cursor-pointer" aria-label="Toggle theme">
         <comp.icon id="light-mode-icon" iconName="sun" className="w-8 h-8 lg:w-6 lg:h-6 dark:text-slate-400" />
         <comp.icon id="dark-mode-icon" iconName="moon" className="hidden w-8 h-8 lg:w-6 lg:h-6 dark:text-slate-400" />

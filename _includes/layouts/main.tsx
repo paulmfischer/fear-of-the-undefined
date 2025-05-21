@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from 'npm:@fortawesome/react-fontawesome';
-import { faXmark } from 'npm:@fortawesome/free-solid-svg-icons';
 import { siteOptions } from "../../consts.ts";
 
 export default ({ title, children, comp }: Lume.Data, helpers: Lume.Helpers) => (
@@ -9,7 +7,6 @@ export default ({ title, children, comp }: Lume.Data, helpers: Lume.Helpers) => 
       <head>
         <meta charSet="UTF-8"></meta>
         <title>{title ?? siteOptions.title}</title>
-        {/* <link rel="stylesheet" href="/code-styles.css"></link> */}
         <link rel="stylesheet" href="/styles.css"></link>
         <link rel="alternate" type="application/rss+xml" title={`RSS Feed for ${siteOptions.baseUrl}`} href="/posts.rss" />
       </head>
