@@ -1,5 +1,6 @@
 import lume from "lume/mod.ts";
 import code_highlight from "lume/plugins/code_highlight.ts";
+import icons from "lume/plugins/icons.ts";
 import favicon from "lume/plugins/favicon.ts";
 import feed from "lume/plugins/feed.ts";
 import jsx from "lume/plugins/jsx.ts";
@@ -23,7 +24,7 @@ site.ignore('README.md');
 site.copy("assets");
 site.copy("scripts");
 site.copy("PaulFischerResume.pdf");
-site.copyRemainingFiles();
+// site.copyRemainingFiles();
 site.data("navLinks", [{
   href: '/',
   text: 'Home',
@@ -34,53 +35,64 @@ site.data("navLinks", [{
   icon: 'about',
 }]);
 
-site.use(favicon({
-  input: "/assets/img/avatar-150x150.png",
-}));
-site.use(date());
-site.use(readInfo());
-site.use(feed({
-  output: ["/posts.rss", "/posts.json"],
-  query: "post",
-  limit: 10,
-  info: {
-    title: siteOptions.title,
-    description: siteOptions.description,
-    authorName: siteOptions.author,
-    authorUrl: siteOptions.baseUrl,
-  },
-  items: {
-    title: "=title",
-    description: "$#post-content > div > p:first-child",
-    authorName: siteOptions.author,
-  },
-}));
-site.use(sitemap());
+site.use(icons());
+  /* {
+  catalogs: [
+    {
+      id: "fontawesome",
+      src: "https://cdn.jsdelivr.net/npm/fontawesome-free-icons@1.0.0/icons/{variant}/{name}.svg",
+      variants: ["solid", "brands"]
+    },
+  ]
+})); */
+// site.use(favicon({
+//   input: "/assets/img/avatar-150x150.png",
+// }));
+// site.use(date());
+// site.use(readInfo());
+// site.use(feed({
+//   output: ["/posts.rss", "/posts.json"],
+//   query: "post",
+//   limit: 10,
+//   info: {
+//     title: siteOptions.title,
+//     description: siteOptions.description,
+//     authorName: siteOptions.author,
+//     authorUrl: siteOptions.baseUrl,
+//   },
+//   items: {
+//     title: "=title",
+//     description: "$#post-content > div > p:first-child",
+//     authorName: siteOptions.author,
+//   },
+// }));
+// site.use(sitemap());
 
-site.use(code_highlight({
-  languages: {
-    csharp: lang_csharp,
-  },
-  // theme: {
-  //   // name: "monokai-sublime",
-  //   // name: "panda-syntax-dark",
-  //   name: "androidstudio",
-  //   cssFile: "/code-styles.css",
-  // }
-}));
+// site.use(code_highlight({
+//   languages: {
+//     csharp: lang_csharp,
+//   },
+//   // theme: {
+//   //   // name: "monokai-sublime",
+//   //   // name: "panda-syntax-dark",
+//   //   name: "androidstudio",
+//   //   cssFile: "/code-styles.css",
+//   // }
+// }));
 site.use(jsx());
 site.use(inline());
-site.use(pagefind({
+/* site.use(pagefind({
   ui: {
     resetStyles: true,
   }
-}));
+})); */
 site.use(tailwindcss({
   options: {
     darkMode: 'selector',
   }
 }));
-site.use(postcss());
-site.use(minifyHTML());
+// site.use(postcss());
+site.add("styles.css");
+// site.use(minifyHTML());
 
 export default site;
