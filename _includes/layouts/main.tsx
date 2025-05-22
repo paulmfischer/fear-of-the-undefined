@@ -25,7 +25,7 @@ export default ({ title, children, comp }: Lume.Data, helpers: Lume.Helpers) => 
             </div>
             <div id="main" className="max-w-full grow flex flex-col lg:pl-56 bg-zinc-100 dark:bg-zinc-900">
               <comp.Header></comp.Header>
-              <div id="content" className="ml-10 m-5 mr-12" data-pagefind-body>
+              <div id="content" className="ml-10 m-5 mr-12 leading-14 lg:leading-7" data-pagefind-body>
                 {children}
               </div>
               <div className="mt-auto">
