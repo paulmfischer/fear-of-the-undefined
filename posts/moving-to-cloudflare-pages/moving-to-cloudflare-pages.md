@@ -6,8 +6,8 @@ date: 2025-05-20T05:00:00Z
 categories:
   - Hosting
 tags:
-  - deno_deploy
-  - cloudflare_pages
+  - deno deploy
+  - cloudflare pages
   - lume
 ---
 I have moved where my blog is hosted for what is the third time in about a year and a half. Originally my blog was hosted on Github pages, about a year ago (January 2024 I believe) I decided to move to Deno Deploy partially because I am using [Lume](https://lume.land/) and partially to just tinker around with Deno Deploy a bit and see how that works.  For what Deno Deploy does and for what I am looking for (a simple and hopefully free hosting location for a SSG blog) it works really well.  I get some analytics to see traffic, can deploy from Github using an actions and I could point my domain to it.

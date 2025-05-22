@@ -4,7 +4,7 @@ layout: layouts/posts.tsx
 url: './index.html'
 date: 2024-10-17T05:00:00Z
 categories:
-  - Object Mappers
+  - dotnet
 tags:
   - automapper
 ---

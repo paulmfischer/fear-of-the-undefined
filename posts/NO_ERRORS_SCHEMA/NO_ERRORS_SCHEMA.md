@@ -5,9 +5,9 @@ url: './index.html'
 date: 2024-03-28T05:00:00Z
 categories:
   - Troubleshooting
-  - Angular
+  - Testing
 tags:
-  - testing
+  - Angular
 ---
 Have you ever been working on an Angular project and you are running tests and you get the following error:
 ![known-element-error](known-element-error.png){inline}

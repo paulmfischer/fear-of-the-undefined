@@ -32,7 +32,6 @@ I have spent most of my career doing enterprise level web applications.  [In my 
 {.list-disc .pl-12}
   - Bachelor of Science in Applied Math & Computer Science
   {.list-[circle] .pl-12}
-  - Bachelor of Fine Arts in Game Design and Development
 + [Northcentral Technical College](https://www.ntc.edu/){.text-blue-600 .dark:text-blue-400} (2005-2006)
   - Associates Degree in Computer Science
   {.list-[circle] .pl-12}

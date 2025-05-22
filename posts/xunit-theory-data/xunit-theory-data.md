@@ -4,10 +4,10 @@ layout: layouts/posts.tsx
 url: './index.html'
 date: 2025-02-13T05:00:00Z
 categories:
+  - Testing
   - dotnet
-  - xunit
 tags:
-  - testing
+  - xunit
 ---
 I have been using `xUnit` for a while and just recently learned about a couple of other ways of supplying test data to `Theory` tests besides using the `InlineData` attribute. When using the `Theory` attribute, I will traditionally add several `InlineData` attributes to supply the test with test data, but this attribute is limited with the kind of data you can use with it.  Typically, anything beyond a primitive type will not work with `InlineData`, so you either have to write multiple tests that have the same Act/Assert sections but with different Arrange sections.  Or have the inline data supply a lot of extra piecemeal that is then used to build more objects as part of the Arrange section.  I recently found out about the [`ClassData`](#using-classdata-attribute) and the [`MemberData`](#using-memberdata-attribute) attributes that allow you to create much more complex test data setups. I will show examples of these but lets start with sample code and the initial way I would have written a test before using `InlineData`.
 
