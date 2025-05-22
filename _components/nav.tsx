@@ -10,13 +10,13 @@ const getIcon = (icon: string) => {
 
 export default ({ comp, ...data }: Lume.Data, helpers: Lume.Helpers) => {
   return (
-    <nav id="nav" className="lg:text-sm lg:leading-6 relative">
-      <ul className="list-none pl-0">
+    <nav id="nav" className="lg:leading-6 relative">
+      <ul className="list-none pl-0 flex flex-col gap-10 lg:gap-4">
         {data.navLinks.map((link: Navigation) => (
-          <li key={link.text} className="my-7 lg:my-4">
+          <li key={link.text}>
             <a href={link.href} className="flex items-center">
-              <comp.icon className="dark:text-slate-400 w-8 h-8 lg:w-6 lg:h-6 mr-4" iconName={getIcon(link.icon)} />
-              <span className="text-blue-600 dark:text-blue-400 text-3xl lg:text-lg">{link.text}</span>
+              <comp.icon className="dark:text-slate-400 w-12 h-12 lg:w-6 lg:h-6 mr-4" iconName={getIcon(link.icon)} />
+              <span className="text-blue-600 dark:text-blue-400">{link.text}</span>
             </a>
           </li>
         ))}
