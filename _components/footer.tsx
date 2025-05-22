@@ -1,11 +1,10 @@
-import { FontAwesomeIcon } from 'npm:@fortawesome/react-fontawesome';
-import { faCopyright } from 'npm:@fortawesome/free-solid-svg-icons';
-
-export default (data: Lume.Data, helpers: Lume.Helpers) => {
+export default ({ comp, github, author }: Lume.Data, helpers: Lume.Helpers) => {
   return <>
-    <footer className="flex mt-3 m-5 pt-3 border-t border-slate-700 text-3xl lg:text-sm">
+    <footer className="flex mt-3 m-5 pt-3 border-t border-slate-700 dark:text-slate-400 text-3xl lg:text-sm">
       <div className="flex gap-2 items-center ml-3">
-        <span className="w-6 h-6 lg:w-3 lg:h-3"><FontAwesomeIcon icon={faCopyright} /></span>2025<a href={data.github} className="text-blue-600 dark:text-blue-400">{data.author}</a>
+        <comp.icon iconName="copyright" className="w-6 h-6 lg:w-4 lg:h-4" />
+        2025
+        <a href={github} className="text-blue-600 dark:text-blue-400">{author}</a>
         <span>|</span>
         Built using<a href="https://lume.land/" className="text-blue-600 dark:text-blue-400">Lume</a>
       </div>
