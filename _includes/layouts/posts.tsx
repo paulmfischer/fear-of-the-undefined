@@ -5,8 +5,8 @@ export default ({ title, children, github, author, date, tags, categories, comp 
     <div>
       <h1 className="mt-4 mb-3 text-6xl dark:text-slate-400">{title}</h1>
       <div className="flex flex-row gap-4">
-        <comp.metadata dataList={categories} icon={<comp.icon className="w-5 h-5 mr-3" iconName="list" />} />
-        <comp.metadata dataList={tags.filter((tag) => tag != 'post')} icon={<comp.icon className="w-5 h-5 mr-3" iconName="tag" />}></comp.metadata>
+        <comp.metadata dataList={categories} icon={<comp.icon className="w-8 h-8 lg:w-4 lg:h-4 mr-3" iconName="category" />} />
+        <comp.metadata dataList={tags.filter((tag) => tag != 'post')} icon={<comp.icon className="w-8 h-8 lg:w-4 lg:h-4  mr-3" iconName="tag" />}></comp.metadata>
       </div>
       <div className="flex gap-3 text-2xl lg:text-sm mt-3 mb-6">
         <div>
@@ -17,7 +17,7 @@ export default ({ title, children, github, author, date, tags, categories, comp 
         </div>
       </div>
       <div className="border-b border-solid border-slate-700"></div>
-      <div id="post-content" className=" dark:bg-zinc-900 theme-an-old-hope">
+      <div id="post-content" className="text-4xl lg:text-lg dark:bg-zinc-900 overflow-auto">
         {children}
       </div>
     </div>
