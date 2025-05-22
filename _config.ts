@@ -75,8 +75,8 @@ site.use(code_highlight({
 site.use(jsx());
 site.use(inline());
 site.use(tailwindcss());
-site.add("styles.css");
 site.use(lightningCss());
+site.add("styles.css");
 site.use(purgecss());
 site.use(minifyHTML());
 
