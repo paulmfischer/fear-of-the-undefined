@@ -11,6 +11,7 @@ import pagefind from "lume/plugins/pagefind.ts";
 import readInfo from "lume/plugins/reading_info.ts";
 import inline from "lume/plugins/inline.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
+import lightningCss from "lume/plugins/lightningcss.ts";
 
 import lang_csharp from "npm:highlight.js/lib/languages/csharp";
 
@@ -73,6 +74,7 @@ site.use(code_highlight({
 site.use(jsx());
 site.use(inline());
 site.use(tailwindcss());
+site.use(lightningCss());
 site.add("styles.css");
 site.use(minifyHTML());
 
