@@ -11,8 +11,11 @@ import pagefind from "lume/plugins/pagefind.ts";
 import readInfo from "lume/plugins/reading_info.ts";
 import inline from "lume/plugins/inline.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
+import lightningCss from "lume/plugins/lightningcss.ts";
+import purgecss from "lume/plugins/purgecss.ts";
 
 import lang_csharp from "npm:highlight.js/lib/languages/csharp";
+
 import { siteOptions } from "./consts.ts";
 
 const site = lume({
@@ -23,6 +26,7 @@ site.ignore('README.md');
 site.copy("assets");
 site.copy("scripts");
 site.copy("PaulFischerResume.pdf");
+
 site.data("navLinks", [{
   href: '/',
   text: 'Home',
@@ -33,12 +37,6 @@ site.data("navLinks", [{
   icon: 'about',
 }]);
 
-site.use(icons());
-// site.use(favicon({
-//   input: "/assets/img/avatar-150x150.png",
-// }));
-site.use(date());
-site.use(readInfo());
 site.use(feed({
   output: ["/posts.rss", "/posts.json"],
   query: "post",
@@ -57,28 +55,29 @@ site.use(feed({
 }));
 site.use(sitemap());
 
-site.use(code_highlight({
-  languages: {
-    csharp: lang_csharp,
-  },
-  // theme: {
-  //   // name: "monokai-sublime",
-  //   // name: "panda-syntax-dark",
-  //   name: "androidstudio",
-  //   cssFile: "/code-styles.css",
-  // }
+site.use(icons());
+site.use(favicon({
+  input: "/assets/img/avatar-150x150.png",
 }));
-site.use(jsx());
-site.use(inline());
+site.use(date());
+site.use(readInfo());
 site.use(pagefind({
   ui: {
     resetStyles: true,
   }
 }));
-site.use(tailwindcss({
-  darkMode: 'selector',
+
+site.use(code_highlight({
+  languages: {
+    csharp: lang_csharp,
+  },
 }));
+site.use(jsx());
+site.use(inline());
+site.use(tailwindcss());
 site.add("styles.css");
+site.use(lightningCss());
+site.use(purgecss());
 site.use(minifyHTML());
 
 export default site;
