@@ -26,6 +26,9 @@ site.copy("assets");
 site.copy("scripts");
 site.copy("PaulFischerResume.pdf");
 
+// post related content to copy
+site.copy("posts/generate-todo-with-ai/gpt-todo.html")
+
 site.data("navLinks", [{
   href: '/',
   text: 'Home',
