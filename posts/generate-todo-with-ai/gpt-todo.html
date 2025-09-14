@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessible Todo App</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .todo-container {
+      background: #fff;
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      color: #0078d4;
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 0 0.5rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Removed outline: none for visible focus */
+    }
+    .icon-btn:focus {
+      outline: 2px solid #005a9e;
+    }
+    .edit-actions .icon-btn {
+      color: #0078d4;
+    }
+    .edit-actions .icon-btn.cancel {
+      color: #d32f2f;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    .todo-label {
+      flex: 1;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .completed .todo-label {
+      text-decoration: line-through;
+      color: #888;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #d32f2f;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 0.5rem;
+      border-radius: 4px;
+    }
+    .delete-btn:focus {
+      outline: 2px solid #d32f2f;
+    }
+    .edit-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 0.5rem;
+    }
+    .editing-input {
+      color: #222;
+      background: #fff;
+    }
+    .icon-btn svg {
+      width: 1.3em;
+      height: 1.3em;
+      vertical-align: middle;
+      pointer-events: none;
+    }
+    .icon-blue svg {
+      fill: #0078d4;
+    }
+    .icon-red svg {
+      fill: #d32f2f;
+    }
+    @media (max-width: 500px) {
+      .todo-container {
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="todo-container" aria-label="Todo application">
+    <h1>Todo List</h1>
+    <form id="todo-form" autocomplete="off" aria-label="Add todo">
+      <label for="todo-input" class="visually-hidden">Add a new todo</label>
+      <input id="todo-input" type="text" placeholder="Add a new todo" required aria-required="true" />
+      <button type="submit" class="icon-btn icon-blue" aria-label="Add todo" title="Add">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 5v14m7-7H5" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </button>
+    </form>
+    <ul id="todo-list" aria-live="polite"></ul>
+  </main>
+  <script>
+    // Accessibility: visually hidden class for labels
+    const style = document.createElement('style');
+    style.innerHTML = `.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }`;
+    document.head.appendChild(style);
+
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+
+    function getTodos() {
+      try {
+        return JSON.parse(localStorage.getItem('todos')) || [];
+      } catch {
+        return [];
+      }
+    }
+    function saveTodos(todos) {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
+    let focusTarget = null;
+    function renderTodos() {
+      const todos = getTodos();
+      todoList.innerHTML = '';
+      if (todos.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'No todos yet.';
+        li.setAttribute('aria-live', 'polite');
+        todoList.appendChild(li);
+        return;
+      }
+      todos.forEach((todo, idx) => {
+        const li = document.createElement('li');
+        li.className = todo.completed ? 'completed' : '';
+        // Checkbox for toggling
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = !!todo.completed;
+        checkbox.setAttribute('aria-label', `Mark ${todo.text} as completed`);
+        checkbox.addEventListener('change', () => {
+          todos[idx].completed = checkbox.checked;
+          saveTodos(todos);
+          renderTodos();
+          focusTarget = `checkbox-${idx}`;
+        });
+        checkbox.id = `checkbox-${idx}`;
+        // Inline editing state
+        if (todo.editing) {
+          const editInput = document.createElement('input');
+          editInput.type = 'text';
+          editInput.value = todo.text;
+          editInput.className = 'todo-label editing-input';
+          editInput.setAttribute('aria-label', `Edit ${todo.text}`);
+          editInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              saveEdit();
+            } else if (e.key === 'Escape') {
+              cancelEdit();
+            }
+          });
+          editInput.id = `edit-input-${idx}`;
+          editInput.style.textDecoration = 'none';
+          // Save button
+          const saveBtn = document.createElement('button');
+          saveBtn.className = 'icon-btn icon-blue';
+          saveBtn.setAttribute('aria-label', 'Save edit');
+          saveBtn.setAttribute('title', 'Save');
+          saveBtn.id = `save-btn-${idx}`;
+          saveBtn.innerHTML = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><polyline points="7 17 10 14 13 17 17 13" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+          // Cancel button
+          const cancelBtn = document.createElement('button');
+          cancelBtn.className = 'icon-btn icon-red';
+          cancelBtn.setAttribute('aria-label', 'Cancel edit');
+          cancelBtn.setAttribute('title', 'Cancel');
+          cancelBtn.id = `cancel-btn-${idx}`;
+          cancelBtn.innerHTML = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"/></svg>';
+          // Actions container for padding
+          const actions = document.createElement('span');
+          actions.className = 'edit-actions';
+          actions.appendChild(saveBtn);
+          actions.appendChild(cancelBtn);
+          li.appendChild(checkbox);
+          li.appendChild(editInput);
+          li.appendChild(actions);
+          function saveEdit() {
+            const newText = editInput.value.trim();
+            if (newText) {
+              todos[idx].text = newText;
+            }
+            delete todos[idx].editing;
+            saveTodos(todos);
+            focusTarget = `edit-btn-${idx}`;
+            renderTodos();
+          }
+          function cancelEdit() {
+            delete todos[idx].editing;
+            focusTarget = `edit-btn-${idx}`;
+            renderTodos();
+          }
+          saveBtn.addEventListener('click', saveEdit);
+          cancelBtn.addEventListener('click', cancelEdit);
+          setTimeout(() => {
+            if (focusTarget === `edit-input-${idx}`) {
+              editInput.focus();
+            } else if (focusTarget === `save-btn-${idx}`) {
+              saveBtn.focus();
+            } else if (focusTarget === `cancel-btn-${idx}`) {
+              cancelBtn.focus();
+            }
+          }, 0);
+        } else {
+          // Label
+          const label = document.createElement('span');
+          label.className = 'todo-label';
+          label.textContent = todo.text;
+          label.tabIndex = 0;
+          label.setAttribute('role', 'button');
+          label.setAttribute('aria-pressed', todo.completed ? 'true' : 'false');
+          label.addEventListener('click', () => {
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event('change'));
+          });
+          label.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              checkbox.checked = !checkbox.checked;
+              checkbox.dispatchEvent(new Event('change'));
+            }
+          });
+          // Edit button
+          const editBtn = document.createElement('button');
+          editBtn.className = 'icon-btn icon-blue';
+          editBtn.setAttribute('aria-label', `Edit ${todo.text}`);
+          editBtn.setAttribute('title', 'Edit');
+          editBtn.id = `edit-btn-${idx}`;
+          editBtn.tabIndex = 0;
+          editBtn.innerHTML = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 20h9" stroke="#0078d4" stroke-width="2" stroke-linecap="round"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+          editBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              editBtn.click();
+            }
+          });
+          // Delete button
+          const delBtn = document.createElement('button');
+          delBtn.className = 'icon-btn icon-red';
+          delBtn.setAttribute('aria-label', `Delete ${todo.text}`);
+          delBtn.setAttribute('title', 'Delete');
+          delBtn.id = `del-btn-${idx}`;
+          delBtn.tabIndex = 0;
+          delBtn.innerHTML = '<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2" stroke="#d32f2f" stroke-width="2" fill="none"/><line x1="9" y1="10" x2="9" y2="16" stroke="#d32f2f" stroke-width="2"/><line x1="15" y1="10" x2="15" y2="16" stroke="#d32f2f" stroke-width="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="#d32f2f" stroke-width="2" fill="none"/></svg>';
+          delBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              delBtn.click();
+            }
+          });
+          li.appendChild(checkbox);
+          li.appendChild(label);
+          li.appendChild(editBtn);
+          li.appendChild(delBtn);
+          setTimeout(() => {
+            if (focusTarget === `edit-btn-${idx}`) {
+              editBtn.focus();
+            } else if (focusTarget === `del-btn-${idx}`) {
+              delBtn.focus();
+            } else if (focusTarget === `checkbox-${idx}`) {
+              checkbox.focus();
+            }
+          }, 0);
+        }
+        todoList.appendChild(li);
+      });
+    }
+    todoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      if (!text) return;
+      const todos = getTodos();
+      todos.push({ text, completed: false });
+      saveTodos(todos);
+      todoInput.value = '';
+      renderTodos();
+    });
+    // Initial render
+    renderTodos();
+  </script>
+</body>
+</html>

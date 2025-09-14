@@ -5,8 +5,8 @@ export default ({ title, children, github, author, date, tags, categories, comp 
     <div className="flex flex-col gap-4 lg:gap-2">
       <h1 className="mt-4 text-6xl dark:text-slate-400">{title}</h1>
       <div className="flex flex-row gap-4">
-        <comp.metadata className="text-3xl" dataList={categories} icon={<comp.icon className="w-8 h-8 lg:w-4 lg:h-4 mr-3" iconName="category" />} />
-        <comp.metadata className="text-3xl" dataList={tags.filter((tag) => tag != 'post')} icon={<comp.icon className="w-8 h-8 lg:w-4 lg:h-4 mr-3" iconName="tag" />}></comp.metadata>
+        <comp.metadata className="text-2xl" dataList={categories} icon={<comp.icon className="w-8 h-8 lg:w-4 lg:h-4 mr-3" iconName="category" />} />
+        <comp.metadata className="text-2xl" dataList={tags.filter((tag) => tag != 'post')} icon={<comp.icon className="w-8 h-8 lg:w-4 lg:h-4 mr-3" iconName="tag" />}></comp.metadata>
       </div>
       <div className="flex gap-3 text-2xl lg:text-sm">
         <div>
