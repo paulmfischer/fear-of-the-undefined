@@ -16,9 +16,6 @@ export default ({ comp, ...data }: Lume.Data, helpers: Lume.Helpers) => {
       <a href={data.mastodon} aria-label="mastodon" target="_blank" rel="me">
         <comp.icon iconName="brand-mastodon" className="w-12 h-12 lg:w-6 lg:h-6 dark:text-slate-400" />
       </a>
-      <a href={emailHref} aria-label="email" target="_blank" rel="noopener">
-        <comp.icon iconName="mail" className="w-12 h-12 lg:w-6 lg:h-6 dark:text-slate-400" />
-      </a>
       <a href="/posts.rss" aria-label="rss" target="_blank" rel="noopener">
         <comp.icon iconName="rss" className="w-12 h-12 lg:w-6 lg:h-6 dark:text-slate-400" />
       </a>
