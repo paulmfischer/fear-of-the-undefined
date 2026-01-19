@@ -27,6 +27,9 @@ site.copy("assets");
 site.copy("scripts");
 site.copy("PaulFischerResume.pdf");
 
+// Copy images from post subdirectories
+site.copy([".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"]);
+
 // post related content to copy
 site.copy("posts/generate-todo-with-ai/gpt-todo.html")
 

@@ -7,12 +7,15 @@ interface TxtOutputOptions {
   filter?: (page: Page) => boolean;
   // Whether to include metadata at the top
   includeMetadata?: boolean;
+  // Whether to include image URLs (if false, only shows alt text)
+  includeImageUrls?: boolean;
 }
 
 export default function txtOutput(options: TxtOutputOptions = {}) {
   const defaults: Required<TxtOutputOptions> = {
     filter: (page: Page) => page.data.url?.startsWith("/posts/") ?? false,
     includeMetadata: true,
+    includeImageUrls: true,
   };
 
   const opts = { ...defaults, ...options };
@@ -36,11 +39,25 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
           },
         );
 
-        // Convert markdown images to links
+        // Convert markdown images
         textContent = textContent.replace(
           /!\[([^\]]*)\]\(([^)]+)\)(\{[^}]+\})?/g,
           (_match, alt: string, src: string) => {
-            return alt ? `[Image: ${alt}](${src})` : `[Image](${src})`;
+            if (!opts.includeImageUrls) {
+              // Just show alt text, skip the URL
+              return alt ? `[Image: ${alt}]` : "[Image]";
+            }
+            // Include the image URL
+            let fullUrl = src;
+            if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('//')) {
+              // Get the directory of the current page
+              const pageDir = page.data.url?.replace(/[^/]*$/, '') || '/';
+              // Resolve relative path
+              const resolvedPath = new URL(src, `https://example.com${pageDir}`).pathname;
+              // Combine with site location
+              fullUrl = new URL(resolvedPath, site.options.location).href;
+            }
+            return alt ? `[Image: ${alt}](${fullUrl})` : `[Image](${fullUrl})`;
           },
         );
 
@@ -58,10 +75,13 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
         textContent = textContent.replace(/^# /gm, "\n\n# ");
 
         // Convert markdown bold and italic
+        // Stars: remove safely (not used in URLs)
         textContent = textContent.replace(/\*\*([^*]+)\*\*/g, "$1");
         textContent = textContent.replace(/\*([^*]+)\*/g, "$1");
-        textContent = textContent.replace(/__([^_]+)__/g, "$1");
-        textContent = textContent.replace(/_([^_]+)_/g, "$1");
+        // Underscore emphasis: avoid touching URLs or identifiers
+        // Only match underscores that are not adjacent to word characters
+        textContent = textContent.replace(/(^|[^\w])__([^_]+)__(?=[^\w]|$)/g, "$1$2");
+        textContent = textContent.replace(/(^|[^\w])_([^_]+)_(?=[^\w]|$)/g, "$1$2");
 
         // Convert markdown lists
         textContent = textContent.replace(/^\s*[-*+] /gm, "• ");
