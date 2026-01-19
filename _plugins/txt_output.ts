@@ -25,23 +25,18 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
         let textContent = page.data.content as string;
 
         // Preserve code blocks first (before other processing)
+        // The content already has markdown code blocks (```), not HTML pre/code tags
         const codeBlocks: string[] = [];
         textContent = textContent.replace(
-          /<pre[^>]*>.*?<\/pre>/gis,
+          /```[\s\S]*?```/g,
           (match) => {
             const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
-            // Extract text content from code block
-            const code = match
-              .replace(/<pre[^>]*>/i, "")
-              .replace(/<\/pre>/i, "")
-              .replace(/<code[^>]*>/i, "")
-              .replace(/<\/code>/i, "")
-              .replace(/&lt;/g, "<")
-              .replace(/&gt;/g, ">")
-              .replace(/&amp;/g, "&")
-              .replace(/&quot;/g, '"')
-              .trim();
-            codeBlocks.push("\n```\n" + code + "\n```\n");
+            // Extract the code block content (everything between the backticks)
+            const lines = match.split('\n');
+            // Remove the first line (```language) and last line (```)
+            const code = lines.slice(1, -1).join('\n').trim();
+            // Store code block - we'll indent it when we restore it
+            codeBlocks.push(code);
             return placeholder;
           },
         );
@@ -135,18 +130,22 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
           .replace(/&mdash;/g, "—")
           .replace(/&ndash;/g, "–");
 
-        // Restore code blocks
-        codeBlocks.forEach((code, i) => {
-          textContent = textContent.replace(`__CODE_BLOCK_${i}__`, code);
-        });
-
         // Clean up excessive whitespace while preserving intentional spacing
+        // Do this BEFORE restoring code blocks to avoid stripping their indentation
         textContent = textContent
           .split("\n")
           .map((line) => line.trim())
           .join("\n")
           .replace(/\n{3,}/g, "\n\n")
           .trim();
+
+        // Restore code blocks (after cleanup, with indentation applied here)
+        codeBlocks.forEach((code, i) => {
+          // Indent each line by 4 spaces and wrap in code fence
+          const indentedCode = code.split("\n").map(line => "    " + line).join("\n");
+          const codeBlock = "\n```\n" + indentedCode + "\n```\n";
+          textContent = textContent.replace(`__CODE_BLOCK_${i}__`, codeBlock);
+        });
 
         // Add metadata header if enabled
         let finalContent = "";
