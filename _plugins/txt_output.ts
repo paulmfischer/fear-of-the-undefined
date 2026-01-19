@@ -18,7 +18,7 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
   const opts = { ...defaults, ...options };
 
   return (site: Site) => {
-    site.process([".html"], (pages: Page[], allPages: Page[]) => {
+    site.process([".md"], (pages: Page[], allPages: Page[]) => {
       for (const page of pages) {
         if (!opts.filter(page)) continue;
 
@@ -30,105 +30,45 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
         textContent = textContent.replace(
           /```[\s\S]*?```/g,
           (match) => {
-            const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
-            // Extract the code block content (everything between the backticks)
-            const lines = match.split('\n');
-            // Remove the first line (```language) and last line (```)
-            const code = lines.slice(1, -1).join('\n').trim();
-            // Store code block - we'll indent it when we restore it
-            codeBlocks.push(code);
+            const placeholder = `@@CODEBLOCK${codeBlocks.length}@@`;
+            codeBlocks.push(match);
             return placeholder;
           },
         );
 
-        // Convert images to links
+        // Convert markdown images to links
         textContent = textContent.replace(
-          /<img[^>]*src=["']([^"']+)["'][^>]*alt=["']([^"']*)["'][^>]*>/gi,
-          (_match, src: string, alt: string) => {
+          /!\[([^\]]*)\]\(([^)]+)\)(\{[^}]+\})?/g,
+          (_match, alt: string, src: string) => {
             return alt ? `[Image: ${alt}](${src})` : `[Image](${src})`;
           },
         );
-        // Handle images without alt text
+
+        // Convert markdown links to plain text with URL
         textContent = textContent.replace(
-          /<img[^>]*src=["']([^"']+)["'][^>]*>/gi,
-          (match, src: string) => {
-            if (match.includes("alt=")) return match; // Already processed
-            return `[Image](${src})`;
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          (_match, text: string, href: string) => {
+            return text ? `${text} (${href})` : href;
           },
         );
 
-        // Convert links to preserve them
-        textContent = textContent.replace(
-          /<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi,
-          (_match, href: string, text: string) => {
-            const linkText = text.replace(/<[^>]+>/g, "").trim();
-            return linkText ? `${linkText} (${href})` : href;
-          },
-        );
+        // Convert markdown headings
+        textContent = textContent.replace(/^### /gm, "\n\n### ");
+        textContent = textContent.replace(/^## /gm, "\n\n## ");
+        textContent = textContent.replace(/^# /gm, "\n\n# ");
 
-        // Convert headings to preserve hierarchy
-        textContent = textContent.replace(
-          /<h1[^>]*>(.*?)<\/h1>/gi,
-          "\n\n# $1\n\n",
-        );
-        textContent = textContent.replace(
-          /<h2[^>]*>(.*?)<\/h2>/gi,
-          "\n\n## $1\n\n",
-        );
-        textContent = textContent.replace(
-          /<h3[^>]*>(.*?)<\/h3>/gi,
-          "\n\n### $1\n\n",
-        );
-        textContent = textContent.replace(
-          /<h4[^>]*>(.*?)<\/h4>/gi,
-          "\n\n#### $1\n\n",
-        );
-        textContent = textContent.replace(
-          /<h5[^>]*>(.*?)<\/h5>/gi,
-          "\n\n##### $1\n\n",
-        );
-        textContent = textContent.replace(
-          /<h6[^>]*>(.*?)<\/h6>/gi,
-          "\n\n###### $1\n\n",
-        );
+        // Convert markdown bold and italic
+        textContent = textContent.replace(/\*\*([^*]+)\*\*/g, "$1");
+        textContent = textContent.replace(/\*([^*]+)\*/g, "$1");
+        textContent = textContent.replace(/__([^_]+)__/g, "$1");
+        textContent = textContent.replace(/_([^_]+)_/g, "$1");
 
-        // Convert paragraphs and divs to preserve spacing
-        textContent = textContent.replace(/<\/p>/gi, "\n\n");
-        textContent = textContent.replace(/<p[^>]*>/gi, "");
-        textContent = textContent.replace(/<\/div>/gi, "\n");
-        textContent = textContent.replace(/<div[^>]*>/gi, "");
+        // Convert markdown lists
+        textContent = textContent.replace(/^\s*[-*+] /gm, "• ");
 
-        // Convert breaks
-        textContent = textContent.replace(/<br\s*\/?>/gi, "\n");
-
-        // Convert list items
-        textContent = textContent.replace(/<li[^>]*>/gi, "\n• ");
-        textContent = textContent.replace(/<\/li>/gi, "");
-        textContent = textContent.replace(/<\/?[uo]l[^>]*>/gi, "\n");
-
-        // Remove script and style tags
-        textContent = textContent.replace(
-          /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-          "",
-        );
-        textContent = textContent.replace(
-          /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
-          "",
-        );
-
-        // Remove remaining HTML tags
-        textContent = textContent.replace(/<[^>]+>/g, "");
-
-        // Decode HTML entities
-        textContent = textContent
-          .replace(/&nbsp;/g, " ")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">")
-          .replace(/&amp;/g, "&")
-          .replace(/&quot;/g, '"')
-          .replace(/&#39;/g, "'")
-          .replace(/&mdash;/g, "—")
-          .replace(/&ndash;/g, "–");
+        // Remove remaining markdown syntax
+        textContent = textContent.replace(/`([^`]+)`/g, "$1"); // inline code
+        textContent = textContent.replace(/~~([^~]+)~~/g, "$1"); // strikethrough
 
         // Clean up excessive whitespace while preserving intentional spacing
         // Do this BEFORE restoring code blocks to avoid stripping their indentation
@@ -141,10 +81,8 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
 
         // Restore code blocks (after cleanup, with indentation applied here)
         codeBlocks.forEach((code, i) => {
-          // Indent each line by 4 spaces and wrap in code fence
-          const indentedCode = code.split("\n").map(line => "    " + line).join("\n");
-          const codeBlock = "\n```\n" + indentedCode + "\n```\n";
-          textContent = textContent.replace(`__CODE_BLOCK_${i}__`, codeBlock);
+          // Put the original fenced block back (keeps language annotation and spacing)
+          textContent = textContent.replace(`@@CODEBLOCK${i}@@`, `\n${code}\n`);
         });
 
         // Add metadata header if enabled
@@ -165,11 +103,16 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
 
         finalContent += textContent;
 
-        // Create the .txt page
-        const txtUrl = page.data.url?.replace(/\.html$/, ".txt").replace(
-          /\/$/,
-          "/index.txt",
-        );
+        // Create the .txt page without colliding with the HTML output path
+        let txtUrl = page.data.url;
+        if (txtUrl?.endsWith("/")) {
+          txtUrl = txtUrl + "index.txt";
+        } else {
+          txtUrl = txtUrl
+            ?.replace(/\/index\.html$/, "/index.txt")
+            .replace(/\.html$/, ".txt")
+            .replace(/\.md$/, ".txt");
+        }
 
         if (txtUrl) {
           // Create a new page using the Page.create() method
