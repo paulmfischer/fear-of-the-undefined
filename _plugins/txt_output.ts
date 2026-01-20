@@ -61,11 +61,25 @@ export default function txtOutput(options: TxtOutputOptions = {}) {
           },
         );
 
-        // Convert markdown links to plain text with URL
+        // Convert markdown links to plain text with full URL
         textContent = textContent.replace(
           /\[([^\]]+)\]\(([^)]+)\)/g,
           (_match, text: string, href: string) => {
-            return text ? `${text} (${href})` : href;
+            let fullUrl = href;
+            // Only convert relative or absolute paths to full URLs if they're not already absolute URLs
+            if (!href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('//')) {
+              // Construct the full URL using the site's location
+              if (href.startsWith('/')) {
+                // Absolute path - combine with site location
+                fullUrl = new URL(href, site.options.location).href;
+              } else {
+                // Relative path - resolve relative to current page's directory
+                const pageDir = page.data.url?.replace(/[^/]*$/, '') || '/';
+                const resolvedPath = new URL(href, `https://example.com${pageDir}`).pathname;
+                fullUrl = new URL(resolvedPath, site.options.location).href;
+              }
+            }
+            return text ? `${text} (${fullUrl})` : fullUrl;
           },
         );
 
