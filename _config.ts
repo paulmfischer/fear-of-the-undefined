@@ -12,6 +12,7 @@ import readInfo from "lume/plugins/reading_info.ts";
 import inline from "lume/plugins/inline.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
 import lightningCss from "lume/plugins/lightningcss.ts";
+import txtOutput from "./_plugins/txt_output.ts";
 
 import lang_csharp from "npm:highlight.js/lib/languages/csharp";
 
@@ -25,6 +26,9 @@ site.ignore('README.md');
 site.copy("assets");
 site.copy("scripts");
 site.copy("PaulFischerResume.pdf");
+
+// Copy images from post subdirectories
+site.copy([".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"]);
 
 // post related content to copy
 site.copy("posts/generate-todo-with-ai/gpt-todo.html")
@@ -75,10 +79,11 @@ site.use(code_highlight({
   },
 }));
 site.use(jsx());
-site.use(inline());
 site.use(tailwindcss());
 site.use(lightningCss());
+site.use(inline());
 site.add("styles.css");
 site.use(minifyHTML());
+site.use(txtOutput());
 
 export default site;
