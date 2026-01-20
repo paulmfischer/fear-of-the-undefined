@@ -61,6 +61,7 @@ site.use(feed({
 }));
 site.use(sitemap());
 
+// Icons are inlined, so drop the generated icon files after build to avoid shipping them
 site.use(icons());
 site.use(favicon({
   input: "/assets/img/avatar-150x150.png",
@@ -85,5 +86,14 @@ site.use(inline());
 site.add("styles.css");
 site.use(minifyHTML());
 site.use(txtOutput());
+
+site.addEventListener("afterBuild", async () => {
+  const iconsDir = `${site.options.dest}/icons`;
+  try {
+    await Deno.remove(iconsDir, { recursive: true });
+  } catch (error) {
+    if (!(error instanceof Deno.errors.NotFound)) throw error;
+  }
+});
 
 export default site;
