@@ -7,6 +7,7 @@ categories:
   - AI
 tags:
   - GPT
+  - Claude
 ---
 I have tried to check out some of the AI tools every now and then to see how well they work when it comes to completing programming related tasks.  From my experience so far, they are very hit or miss.  Sometimes it gives me almost exactly what I am looking for, other times, they fail miserably and give me something that is completely wrong or doesn't even compile.
 
