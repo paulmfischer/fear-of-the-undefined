@@ -9,7 +9,7 @@ Completed 2026-10-22. All nine articles now publish text companions and include 
 - Metadata includes title, stable ISO UTC publication date, configured author and post tags (including inherited `post`). Tags are read from source front matter; article content and date come from final HTML.
 - Relative links and images become absolute URLs, preserving query strings and fragments. Email links retain their scheme.
 - Fenced code retains language, exact code text, indentation and blank lines. Longer fences protect code containing backticks. Generated heading-anchor controls and syntax-highlight markup are omitted.
-- Nested lists retain indentation, ordered lists retain numbering, images become labelled URLs, and tables use rows with pipe-separated cells. Presentation such as emphasis, table alignment and blockquote styling is intentionally flattened.
+- Nested lists retain indentation, ordered lists retain numbering, images become labelled URLs, and tables use rows with pipe-separated cells. Blockquotes prefix each line with `>`, including nested quotes and quoted code. Presentation such as emphasis and table alignment is intentionally flattened.
 - Directory article URLs generate `index.txt`; explicit `.html` permalinks generate matching `.txt` filenames. Only articles receive companions; navigation, About, the demo and search index remain HTML-only.
 
 Canonical text-to-HTML redirects are removed. Ten compatibility rules redirect the historical double-slash form to canonical text, including raw and encoded bracket variants. The archived Lume converter remains historical evidence and is not imported.

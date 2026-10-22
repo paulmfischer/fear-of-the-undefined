@@ -129,6 +129,14 @@ test("text companions contain article metadata and only doubled-slash URLs redir
   assert.equal(rules.length, 10);
 });
 
+test("text conversion preserves blockquote markers, nesting and quoted code", () => {
+  const text = articleText('<html><h1>Quotes</h1><time dateTime="2026-01-01Z"></time><div id="post-content"><p>Me:</p><blockquote><p>First line<br>Second line</p><p>Another paragraph</p><blockquote><p>Nested quote</p></blockquote><pre><code class="language-js">  x();\n\n    y();\n</code></pre></blockquote><p>Outside quote</p></div></html>', 'https://paulmfischer.dev/posts/example/', 'Paul Fischer', []);
+  assert(text.includes('> First line\n> Second line\n>\n> Another paragraph'));
+  assert(text.includes('> > Nested quote'));
+  assert(text.includes('> ```js\n>   x();\n>\n>     y();\n> ```'));
+  assert(text.includes('\n\nOutside quote\n'));
+});
+
 test("text conversion preserves code, links, images, entities and nested lists", () => {
   const text = articleText('<html><h1>Example &amp; test</h1><time dateTime="2026-01-01Z"></time><div id="post-content"><h2>Heading<a class="header-anchor" href="#heading">#</a></h2><p><strong>Bold</strong> <a href="../other/?q=1#section">other</a> <a href="mailto:a@example.com">email</a><img alt="Example" src="./image.png?q=2#part"></p><ul><li>Outer<ul><li>Inner</li></ul></li></ul><pre><code class="language-csharp">  var x = &quot;```&quot;;\n\n\n    x++;</code></pre></div></html>', 'https://paulmfischer.dev/posts/example/', 'Paul Fischer', ['post', 'testing']);
   assert(text.includes('Title: Example & test'));
