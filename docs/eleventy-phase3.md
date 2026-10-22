@@ -1,5 +1,7 @@
 # Phase 3 — Content and presentation port
 
+Historical phase 3 record. [Phase 4](eleventy-phase4/README.md) restores styling and publishing features and documents the current user review preview.
+
 ## Completed
 
 - Expanded Eleventy input from the single proof article to the repository's actual content. Build documentation and legacy output/cache directories are excluded.

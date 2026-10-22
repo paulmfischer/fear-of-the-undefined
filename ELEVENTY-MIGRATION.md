@@ -27,12 +27,12 @@
   - [x] Port the main/article layouts and shared components using explicit TSX imports and typed props.
   - [x] Port homepage, About, and 404; preserve Markdown bodies and asset paths.
   - [x] Remove Text Version links while text generation is deferred; track existing public text URL handling as a phase 5 deployment gate.
-- [ ] Phase 4 — Restore assets and publishing features
-  - [ ] Restore Tailwind/CSS processing and code highlighting, preserving C# examples.
-  - [ ] Restore icons, favicons, reading times, scripts, images, résumé, and the standalone demo HTML.
-  - [ ] Restore RSS/JSON feeds and sitemap with existing URLs and equivalent metadata.
-  - [ ] Run Pagefind against final generated HTML; preserve search annotations and UI.
-  - [ ] Verify development watching for CSS and generated features.
+- [x] Phase 4 — Restore assets and publishing features
+  - [x] Restore Tailwind/CSS processing and code highlighting, preserving C# examples.
+  - [x] Restore icons, favicons, reading times, scripts, images, résumé, and the standalone demo HTML.
+  - [x] Restore RSS/JSON feeds and sitemap with existing URLs and equivalent metadata.
+  - [x] Run Pagefind against final generated HTML; preserve search annotations and UI.
+  - [x] Verify development watching for CSS and generated features.
 - [ ] Phase 5 — Validate and prepare deployment
   - [ ] Decide existing public text URL handling before deployment (archive, temporary article redirects, or restored generation).
   - [ ] Compare route/asset manifests against the Lume and live baselines.
@@ -57,3 +57,4 @@ Phases 1–5 complete the initial migration. All current HTML pages and assets r
 - 2026-10-22: Phase 1 complete. See [baseline inventory, findings, and screenshots](docs/eleventy-baseline/README.md). Isolated Lume builds passed; 39 non-search-index resources returned HTTP 200 on production; mobile navigation, theme persistence, search, and custom 404 smoke checks passed. UTC formatting is needed to preserve production dates. Existing mobile overlap and Cloudflare HTML injection are recorded. Phase 2 has not started.
 - 2026-10-22: Phase 2 complete. See [setup, limitations, and verification](docs/eleventy-phase2.md). Eleventy 3.1.7 on Node 22.23.4 renders the existing XUnit article through TSX into isolated `_site-eleventy` output. Clean install, build, type checking, browser rendering, and watched Markdown/component/layout/helper changes passed. A built-in Node supervisor avoids stale imported TSX modules. Phase 3 has not started; production/CI remain unchanged.
 - 2026-10-22: Phase 3 complete. See [content port and verification](docs/eleventy-phase3.md). All 12 generated page routes and copied content assets are present; Markdown source is unchanged. Five regression groups, type checking, browser smoke checks, and normalized production-content/image comparisons passed. Styling, icons, highlighting, reading times, search, and feeds remain phase 4. Existing text URL handling is explicitly tracked in phase 5 before deployment. Production/CI remain unchanged.
+- 2026-10-22: Phase 4 complete. See [preview instructions, verification, and screenshots](docs/eleventy-phase4/README.md). Styling, icons, code highlighting, reading times, favicons, search, feeds, sitemap, and robots are restored. Eight regression groups, strict application type checks, clean dependency installation, browser checks, and live feed/visual comparisons passed. Temporary watch probes were reverted. The preview is ready for user review; phase 5 and production publication have not started.

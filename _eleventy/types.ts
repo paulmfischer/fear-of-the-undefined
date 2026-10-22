@@ -19,6 +19,7 @@ export interface PostData extends PageData {
   categories?: string[];
   tags: string[];
   description?: string;
+  readingMinutes: number;
 }
 
 export interface PostEntry {

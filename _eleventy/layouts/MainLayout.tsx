@@ -21,6 +21,13 @@ export function MainLayout({ title, children, site }: MainLayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content={site.siteDescription} />
         <title>{title}</title>
+        <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+        <link rel="stylesheet" href="/styles.css" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="alternate" type="application/rss+xml" href="/posts.rss" title={`RSS Feed for ${site.siteTitle}`} />
+        <link rel="alternate" type="application/feed+json" href="/posts.json" title={`JSON Feed for ${site.siteTitle}`} />
       </head>
       <body className="text-5xl lg:text-lg text-slate-900 bg-zinc-200 dark:text-slate-300 dark:bg-zinc-800">
         <div className="max-w-8xl mx-auto lg:px-8"><div className="min-h-screen flex">
@@ -37,6 +44,8 @@ export function MainLayout({ title, children, site }: MainLayoutProps) {
         </div></div>
         <script src="/scripts/toggle-sidebar.js" />
         <script src="/scripts/toggle-theme.js" />
+        <script src="/pagefind/pagefind-ui.js" />
+        <script src="/scripts/search.js" />
       </body>
     </html>
   );

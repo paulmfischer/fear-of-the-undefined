@@ -50,9 +50,10 @@ function scheduleRestart() {
 
 const watchers = [
   watch("_eleventy", { recursive: true }, scheduleRestart),
+  watch("_includes/styles", { recursive: true }, scheduleRestart),
   // Watch the directory so atomic-save editors can replace config file inodes.
   watch(".", (_event, filename) => {
-    if (["consts.ts", "eleventy.config.js", "tsconfig.json", "index.11ty.tsx", "_data.yml"].includes(String(filename))) {
+    if (["consts.ts", "eleventy.config.js", "tsconfig.json", "index.11ty.tsx", "_data.yml", "styles.css"].includes(String(filename))) {
       scheduleRestart();
     }
   }),
