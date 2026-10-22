@@ -46,11 +46,11 @@ Posts inherit their article layout and the `post` collection tag from directory 
 
 ## Project structure
 
-- `index.11ty.tsx`: newest-first post listing.
+- `index.tsx`: newest-first post listing.
 - `_eleventy/layouts/` and `_eleventy/components/`: shared TSX presentation.
 - `_eleventy/helpers/`: dates, permalinks, reading estimates, assets and publishing output.
 - `_data.yml`: profile/social metadata; `consts.ts`: canonical site/feed settings.
-- `posts/_data.yml` and `posts/posts.11tydata.js`: inherited post data and permalink mapping.
+- `posts/_data.yml` and `posts/posts.data.js`: inherited post data and permalink mapping.
 - `styles.css` and `_eleventy/styles/code-highlight.css`: Tailwind/custom styles and code colors.
 - `scripts/`: browser behavior and the development supervisor.
 - `tests/`: generated-site checks and isolated rebuild regression.

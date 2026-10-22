@@ -1,5 +1,5 @@
 ---
-layout: layouts/page.11ty.tsx
+layout: layouts/page.tsx
 title: About
 ---
 Hello, my name is Paul Fischer.

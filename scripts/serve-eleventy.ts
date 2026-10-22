@@ -56,7 +56,7 @@ const watchers = [
   }),
   // Watch the directory so atomic-save editors can replace config file inodes.
   watch(".", (_event, filename) => {
-    if (String(filename).endsWith(".md") || ["consts.ts", "eleventy.config.js", "tsconfig.json", "index.11ty.tsx", "_data.yml", "styles.css", "favicon.svg", "PaulFischerResume.pdf"].includes(String(filename))) {
+    if (String(filename).endsWith(".md") || ["consts.ts", "eleventy.config.js", "tsconfig.json", "index.tsx", "_data.yml", "styles.css", "favicon.svg", "PaulFischerResume.pdf"].includes(String(filename))) {
       scheduleRestart();
     }
   }),

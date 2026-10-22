@@ -4,7 +4,7 @@ import { postPermalink } from "../_eleventy/helpers/permalinks.ts";
 
 export default {
   ...parse(readFileSync(new URL("./_data.yml", import.meta.url), "utf8")),
-  layout: "layouts/article.11ty.tsx",
+  layout: "layouts/article.tsx",
   eleventyComputed: {
     permalink: (data) => postPermalink(data.page.inputPath, data.url),
   },

@@ -11,13 +11,14 @@ import { buildAssets, buildPublishing } from "./_eleventy/helpers/build.ts";
 import hljs from "highlight.js";
 
 export default function (eleventyConfig) {
+  eleventyConfig.setDataFileSuffixes([".data", ""]);
   // The native dependency scanner parses JavaScript, not TypeScript. The serve
   // supervisor already restarts for imported TS/TSX and data-file changes.
   eleventyConfig.setWatchJavaScriptDependencies(false);
   // npm run serve owns watching, including deletions. Restarting avoids stale
   // template/output-directory caches and lets every preview build start cleanly.
   eleventyConfig.watchIgnores.add("**");
-  eleventyConfig.addExtension(["11ty.tsx"], {
+  eleventyConfig.addExtension(["tsx"], {
     key: "11ty.js",
     compile() {
       return async function (data) {
@@ -26,7 +27,7 @@ export default function (eleventyConfig) {
       };
     },
   });
-  eleventyConfig.addTemplateFormats("11ty.tsx");
+  eleventyConfig.addTemplateFormats("tsx");
   eleventyConfig.addGlobalData("site", () => validateSite(parse(readFileSync("_data.yml", "utf8"))));
   eleventyConfig.addCollection("posts", (collection) =>
     collection.getFilteredByTag("post").sort((a, b) => b.date.getTime() - a.date.getTime()),
@@ -61,7 +62,7 @@ export default function (eleventyConfig) {
   // The supervisor also watches Markdown and copied assets, including deletions.
 
   return {
-    templateFormats: ["md", "11ty.tsx"],
+    templateFormats: ["md", "tsx"],
     markdownTemplateEngine: false,
     htmlTemplateEngine: false,
     dir: {

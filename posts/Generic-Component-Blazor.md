@@ -1,5 +1,5 @@
 ---
-layout: layouts/article.11ty.tsx
+layout: layouts/article.tsx
 title: "Generic Components in Blazor"
 date: 2019-06-21T05:00:00Z
 categories:
