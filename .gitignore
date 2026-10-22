@@ -10,4 +10,5 @@ _cache
 _vendor
 node_modules/
 _site-eleventy/
+docs/
 

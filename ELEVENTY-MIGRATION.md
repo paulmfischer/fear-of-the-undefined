@@ -53,6 +53,8 @@ Phases 1–5 complete the initial migration. All current HTML pages and assets r
 
 ## Baseline evidence and work log
 
+Detailed reports and screenshots referenced below are optional local artifacts in the ignored `docs/` directory; they are not included in repository clones.
+
 - 2026-10-22: Phase 6 complete. See [text conversion and verification](docs/eleventy-phase6.md). Nine text companions and article links are restored, canonical text-to-HTML redirects are removed, and historical double-slash links redirect to text. Type checking, site regressions, clean/watch lifecycle tests and local Cloudflare text responses passed. Nothing was pushed, merged or deployed.
 
 - 2026-10-22: Plan recorded before implementation. Baseline inspection is the first work item; no generator changes yet.
