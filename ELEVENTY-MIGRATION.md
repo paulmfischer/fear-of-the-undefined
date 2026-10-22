@@ -11,12 +11,12 @@
 
 ## Progress
 
-- [ ] Phase 1 — Establish the baseline
-  - [ ] Inventory pages, public URLs, front matter, assets, and build features.
-  - [ ] Capture representative live desktop/mobile pages and both themes.
-  - [ ] Record live navigation, theme, search, feed, and missing-page behavior.
-  - [ ] Generate an isolated Lume baseline if the runtime is available; document blockers otherwise.
-  - [ ] Record baseline discrepancies and existing text-version URLs separately.
+- [x] Phase 1 — Establish the baseline
+  - [x] Inventory pages, public URLs, front matter, assets, and build features.
+  - [x] Capture representative live desktop/mobile pages and both themes.
+  - [x] Record live navigation, theme, search, feed, and missing-page behavior.
+  - [x] Generate an isolated Lume baseline if the runtime is available; document blockers otherwise.
+  - [x] Record baseline discrepancies and existing text-version URLs separately.
 - [ ] Phase 2 — Establish the Eleventy build
   - [ ] Select and pin supported Node/Eleventy versions and commit a dependency lockfile.
   - [ ] Configure ESM, TSX loading, static rendering, and TypeScript checking.
@@ -53,3 +53,4 @@ Phases 1–5 complete the initial migration. All current HTML pages and assets r
 ## Baseline evidence and work log
 
 - 2026-10-22: Plan recorded before implementation. Baseline inspection is the first work item; no generator changes yet.
+- 2026-10-22: Phase 1 complete. See [baseline inventory, findings, and screenshots](docs/eleventy-baseline/README.md). Isolated Lume builds passed; 39 non-search-index resources returned HTTP 200 on production; mobile navigation, theme persistence, search, and custom 404 smoke checks passed. UTC formatting is needed to preserve production dates. Existing mobile overlap and Cloudflare HTML injection are recorded. Phase 2 has not started.
