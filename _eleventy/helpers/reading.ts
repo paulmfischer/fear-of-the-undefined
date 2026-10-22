@@ -1,6 +1,6 @@
 const segmenter = new Intl.Segmenter("en", { granularity: "word" });
 
-// Match Lume's raw-Markdown word segmentation and 275 words/minute estimate.
+// Estimate reading time from raw Markdown at 275 words per minute.
 export function readingMinutes(content: string): number {
   let words = 0;
   for (const word of segmenter.segment(content)) if (word.isWordLike) words++;
