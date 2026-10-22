@@ -15,6 +15,7 @@ export interface PageData {
 }
 
 export interface PostData extends PageData {
+  page: { url: string };
   date: Date | string;
   categories?: string[];
   tags: string[];

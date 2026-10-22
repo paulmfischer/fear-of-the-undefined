@@ -5,6 +5,7 @@ import { formatDate } from "../_eleventy/helpers/dates.ts";
 import { postPermalink } from "../_eleventy/helpers/permalinks.ts";
 import { parseHTML, DOMParser } from "linkedom";
 import sharp from "sharp";
+import { articleText, textUrl } from "../_eleventy/helpers/text.ts";
 
 const output = new URL("../_site/", import.meta.url);
 const html = path => readFile(new URL(path, output), "utf8");
@@ -20,7 +21,7 @@ test("all baseline HTML routes render through the shared layout", async () => {
     assert(page.startsWith("<!DOCTYPE html>"), route);
     for (const id of ["sidebar", "nav", "content", "toggle-theme", "search"]) assert(page.includes(`id="${id}"`), `${route}: ${id}`);
     assert(page.includes("Built using"));
-    assert(!page.includes("Text Version</a>"));
+    assert.equal(page.includes("Text Version</a>"), route.startsWith("posts/"));
     assert(!page.includes("react-dom/client"));
   }
 });
@@ -59,7 +60,7 @@ test("content assets are copied unchanged and build documents are excluded", asy
     assert.deepEqual(await readFile(new URL(path, output)), await readFile(new URL(`../${path}`, import.meta.url)));
   }
   const files = await readdir(output, { recursive: true });
-  assert(!files.some(path => path.endsWith("index.txt")), "article text output is deferred");
+  assert.equal(files.filter(path => path.endsWith("index.txt")).length, 9);
   assert(!files.some(path => /^(docs|README|ELEVENTY-MIGRATION|node_modules|_site)/.test(path)), "build-only content must not be published");
 });
 
@@ -111,15 +112,34 @@ test("sitemap covers the eleven public content pages and robots advertises it", 
   assert((await html("robots.txt")).includes("Sitemap: https://paulmfischer.dev/sitemap.xml"));
 });
 
-test("legacy text URLs temporarily redirect to the corresponding HTML articles", async () => {
+test("text companions contain article metadata and only doubled-slash URLs redirect", async () => {
   const rules = (await html("_redirects")).trim().split("\n");
   for (const post of posts) {
     const url = encodeURI(`/posts/${post}/`);
-    assert(rules.includes(`${url}index.txt ${url} 302`));
-    assert(rules.includes(`${url}/index.txt ${url} 302`));
+    assert(!rules.some(rule => rule.startsWith(`${url}index.txt `)));
+    assert(rules.includes(`${url}/index.txt ${url}index.txt 302`));
+    const text = await html(`posts/${post}/index.txt`);
+    assert.match(text, /^Title: .+\nDate: \d{4}-\d\d-\d\dT.+Z\nAuthor: Paul Fischer\nTags: /);
+    const document = parseHTML(await html(`posts/${post}/index.html`)).document;
+    assert.equal(document.querySelector('a[href$="index.txt"]').getAttribute("href"), `${url}index.txt`);
+    for (const code of document.querySelectorAll("#post-content pre code")) assert(text.includes(code.textContent));
+    assert(!text.includes('class="hljs'));
   }
-  assert(rules.includes('/posts/github-actions[bot]-denied/index.txt /posts/github-actions%5Bbot%5D-denied/ 302'));
-  assert.equal(rules.length, 20);
+  assert(rules.includes('/posts/github-actions[bot]-denied//index.txt /posts/github-actions%5Bbot%5D-denied/index.txt 302'));
+  assert.equal(rules.length, 10);
+});
+
+test("text conversion preserves code, links, images, entities and nested lists", () => {
+  const text = articleText('<html><h1>Example &amp; test</h1><time dateTime="2026-01-01Z"></time><div id="post-content"><h2>Heading<a class="header-anchor" href="#heading">#</a></h2><p><strong>Bold</strong> <a href="../other/?q=1#section">other</a> <a href="mailto:a@example.com">email</a><img alt="Example" src="./image.png?q=2#part"></p><ul><li>Outer<ul><li>Inner</li></ul></li></ul><pre><code class="language-csharp">  var x = &quot;```&quot;;\n\n\n    x++;</code></pre></div></html>', 'https://paulmfischer.dev/posts/example/', 'Paul Fischer', ['post', 'testing']);
+  assert(text.includes('Title: Example & test'));
+  assert(text.includes('## Heading'));
+  assert(text.includes('other (https://paulmfischer.dev/posts/other/?q=1#section)'));
+  assert(text.includes('email (mailto:a@example.com)'));
+  assert(text.includes('[Image: Example] (https://paulmfischer.dev/posts/example/image.png?q=2#part)'));
+  assert(text.includes('  - Inner'));
+  assert(text.includes('````csharp\n  var x = "```";\n\n\n    x++;\n````'));
+  assert.equal(textUrl('/posts/example/'), '/posts/example/index.txt');
+  assert.equal(textUrl('/posts/example/renamed.html'), '/posts/example/renamed.txt');
 });
 
 test("all generated internal links, images, scripts and fragment targets resolve", async () => {

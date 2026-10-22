@@ -42,16 +42,18 @@
   - [x] Verify clean production builds and rebuilds after edits/deletions.
   - [x] Update CI and contributor instructions; remove obsolete Lume/Deno configuration after parity is verified.
   - [x] Review the completed migration before production publication (prepared only; no push/merge/deployment).
-- [ ] Phase 6 — Stretch goal: text versions
-  - [ ] Reassess conversion requirements and port the reusable TypeScript logic.
-  - [ ] Generate text companions and restore article links.
-  - [ ] Verify URLs, metadata, links, images, fenced code, and rebuild behavior.
+- [x] Phase 6 — Stretch goal: text versions
+  - [x] Reassess conversion requirements and port the reusable TypeScript logic.
+  - [x] Generate text companions and restore article links.
+  - [x] Verify URLs, metadata, links, images, fenced code, and rebuild behavior.
 
 ## Completion criteria
 
 Phases 1–5 complete the initial migration. All current HTML pages and assets retain their public URLs; desktop/mobile appearance and behavior match the agreed baselines; search, feeds, sitemap, highlighting, and reading times work; clean builds and watched rebuilds require no Deno; CI builds reproducibly. Text generation does not block initial completion.
 
 ## Baseline evidence and work log
+
+- 2026-10-22: Phase 6 complete. See [text conversion and verification](docs/eleventy-phase6.md). Nine text companions and article links are restored, canonical text-to-HTML redirects are removed, and historical double-slash links redirect to text. Type checking, site regressions, clean/watch lifecycle tests and local Cloudflare text responses passed. Nothing was pushed, merged or deployed.
 
 - 2026-10-22: Plan recorded before implementation. Baseline inspection is the first work item; no generator changes yet.
 - 2026-10-22: Phase 1 complete. See [baseline inventory, findings, and screenshots](docs/eleventy-baseline/README.md). Isolated Lume builds passed; 39 non-search-index resources returned HTTP 200 on production; mobile navigation, theme persistence, search, and custom 404 smoke checks passed. UTC formatting is needed to preserve production dates. Existing mobile overlap and Cloudflare HTML injection are recorded. Phase 2 has not started.

@@ -59,9 +59,9 @@ Styles are compiled from rendered classes, including Markdown attributes. Search
 
 ## Text versions
 
-Text generation is deferred. Existing article `index.txt` links temporarily redirect to HTML through generated Cloudflare `_redirects` rules (302), including the old double-slash form. Eleventy's local server does not emulate these hosting rules; use the Cloudflare local preview described in the [phase 5 notes](docs/eleventy-phase5.md) to test them. Remove the corresponding rules when text output returns.
+Each article includes a Text Version link. The build generates a UTF-8 companion at `index.txt` (or `name.txt` for explicit `name.html` permalinks), containing title, ISO UTC date, author, tags and article content. Links and images use absolute URLs; fenced code retains its language and whitespace. Text comes from rendered article HTML, so Markdown extensions and HTML entities are handled consistently. Nested lists, headings and tables use plain-text notation.
 
-The previous conversion implementation is archived in [legacy-txt-output.ts](docs/eleventy-baseline/legacy-txt-output.ts) for the stretch goal; it is not part of the build.
+Canonical text URLs serve files directly. Generated Cloudflare rules only redirect historical double-slash text links to their canonical text URLs. Eleventy's local server does not emulate these hosting rules. The old converter remains archived in [legacy-txt-output.ts](docs/eleventy-baseline/legacy-txt-output.ts); the current implementation is `_eleventy/helpers/text.ts`. See [phase 6 verification](docs/eleventy-phase6.md).
 
 ## Deployment
 

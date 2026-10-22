@@ -8,6 +8,8 @@ import { Feed } from "feed";
 import { parseHTML } from "linkedom";
 import * as pagefind from "pagefind";
 import { siteOptions } from "../../consts.ts";
+import { parse } from "yaml";
+import { articleText, textUrl } from "./text.ts";
 
 interface BuildResult { url: string; content: string; inputPath: string; outputPath: string }
 
@@ -94,14 +96,20 @@ export async function buildPublishing(output: string, results: BuildResult[]) {
   const urls = results.filter(r => r.url !== "/404.html").map(r => absolute(r.url));
   await writeFile(join(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url => `<url><loc>${xml(url)}</loc></url>`).join("")}</urlset>`);
   await writeFile(join(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${absolute("/sitemap.xml")}\n`);
-  // Keep old text links usable while text generation is deferred. Temporary
-  // redirects can be removed when text companions return without a permanent cache.
+  for (const result of articles) {
+    const source = await readFile(result.inputPath, "utf8");
+    const metadata = parse(source.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? "") ?? {};
+    const tags = [...new Set<string>(["post", ...(metadata.tags ?? [])])];
+    const destination = join(output, decodeURI(textUrl(result.url)));
+    await mkdir(resolve(destination, ".."), { recursive: true });
+    await writeFile(destination, articleText(result.content, absolute(result.url), siteOptions.author, tags));
+  }
+  // Only historical double-slash links need redirects now; canonical text URLs
+  // are real assets and must never redirect to HTML.
   const redirects = articles.flatMap(result => {
-    const url = new URL(absolute(result.url)).pathname;
-    const textUrl = url.endsWith("/") ? `${url}index.txt` : url.replace(/\.html$/, ".txt");
-    return [textUrl, decodeURI(textUrl)].flatMap(source => [
-      `${source} ${url} 302`, `${source.replace(/\/index\.txt$/, "//index.txt")} ${url} 302`,
-    ]);
+    const url = new URL(absolute(textUrl(result.url))).pathname;
+    return url.endsWith("/index.txt") ? [...new Set([url, decodeURI(url)])].map(source =>
+      `${source.replace(/\/index\.txt$/, "//index.txt")} ${url} 302`) : [];
   });
   await writeFile(join(output, "_redirects"), [...new Set(redirects)].join("\n") + "\n");
 

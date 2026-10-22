@@ -23,6 +23,7 @@ test("clean and watched rebuilds remove renamed pages, deleted content/assets an
     const generated = path => join(fixture, "_site", path);
     build();
     await access(generated("posts/rebuild-probe/index.html"));
+    assert((await readFile(generated("posts/rebuild-probe/index.txt"), "utf8")).includes("quartzmarigoldcobalt"));
     await access(generated("posts/rebuild-probe/probe.svg"));
     assert.equal(JSON.parse(await readFile(generated("posts.json"))).items.length, 10);
 
@@ -32,12 +33,15 @@ test("clean and watched rebuilds remove renamed pages, deleted content/assets an
     await assert.rejects(access(generated("posts/rebuild-probe/index.html")));
     await assert.rejects(access(generated("posts/rebuild-probe/probe.svg")));
     await access(generated("posts/rebuild-probe/renamed.html"));
+    await access(generated("posts/rebuild-probe/renamed.txt"));
+    await assert.rejects(access(generated("posts/rebuild-probe/index.txt")));
     await access(generated("assets/img/avatar-150x150.png"));
 
     await rm(directory, { recursive: true });
     await writeFile(generated("orphan.txt"), "must not survive");
     build();
     await assert.rejects(access(generated("posts/rebuild-probe/renamed.html")));
+    await assert.rejects(access(generated("posts/rebuild-probe/renamed.txt")));
     await assert.rejects(access(generated("orphan.txt")));
     assert.equal(JSON.parse(await readFile(generated("posts.json"))).items.length, 9);
     for (const path of ["index.html", "sitemap.xml", "posts.rss", "posts.json"]) {
@@ -60,7 +64,10 @@ test("clean and watched rebuilds remove renamed pages, deleted content/assets an
           assert.equal(data.items.length, count);
           await access(generated("pagefind/pagefind.js"));
           await access(generated("assets/img/avatar-150x150.png"));
-          if (route) await access(generated(route));
+          if (route) {
+            await access(generated(route));
+            assert((await readFile(generated(route.replace(/\.html$/, ".txt")), "utf8")).includes("quartzmarigoldcobalt"));
+          }
           return;
         } catch { await new Promise(resolve => setTimeout(resolve, 100)); }
       }
@@ -72,12 +79,24 @@ test("clean and watched rebuilds remove renamed pages, deleted content/assets an
       await writeFile(source, content);
       await writeFile(join(directory, "probe.svg"), '<svg xmlns="http://www.w3.org/2000/svg"/>');
       await waitForBuild(10, "posts/rebuild-probe/index.html");
+      await writeFile(source, content.replace("Rebuild probe", "Edited rebuild probe"));
+      for (let attempt = 0; attempt < 150; attempt++) {
+        try {
+          assert((await readFile(generated("posts/rebuild-probe/index.txt"), "utf8")).startsWith("Title: Edited rebuild probe\n"));
+          break;
+        } catch (error) {
+          if (attempt === 149) throw error;
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
       await writeFile(source, content.replace("./index.html", "./renamed.html"));
       await waitForBuild(10, "posts/rebuild-probe/renamed.html");
       await assert.rejects(access(generated("posts/rebuild-probe/index.html")));
+      await assert.rejects(access(generated("posts/rebuild-probe/index.txt")));
       await rm(directory, { recursive: true });
       await waitForBuild(9);
       await assert.rejects(access(generated("posts/rebuild-probe/renamed.html")));
+      await assert.rejects(access(generated("posts/rebuild-probe/renamed.txt")));
       await assert.rejects(access(generated("posts/rebuild-probe/probe.svg")));
     } finally {
       if (preview.exitCode === null && preview.signalCode === null) {

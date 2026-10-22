@@ -4,8 +4,9 @@ import { MainLayout } from "./MainLayout.tsx";
 import type { PostData } from "../types.ts";
 import { Metadata } from "../components/Metadata.tsx";
 import { Icon } from "../components/Icon.tsx";
+import { textUrl } from "../helpers/text.ts";
 
-export default function Article({ title, date, content, categories, tags, site }: PostData) {
+export default function Article({ title, date, content, categories, tags, site, page }: PostData) {
   return (
     <MainLayout title={title} site={site}>
       <article className="flex flex-col gap-4 lg:gap-2">
@@ -18,6 +19,7 @@ export default function Article({ title, date, content, categories, tags, site }
           <div>Posted <time dateTime={new Date(date).toISOString()}>{formatDate(date)}</time></div>
         </div>
         <div className="border-b border-solid border-slate-700" />
+   <a href={encodeURI(textUrl(page.url))} className="text-blue-600 dark:text-blue-400">Text Version</a>
         {/* Only the HTML produced from repository-authored Markdown is inserted raw. */}
         <div id="post-content" className="dark:bg-zinc-900 overflow-auto" dangerouslySetInnerHTML={{ __html: content }} />
       </article>
