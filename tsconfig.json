@@ -9,5 +9,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node", "react", "react-dom"]
   },
-  "include": ["_eleventy/**/*.ts", "_eleventy/**/*.tsx", "scripts/serve-eleventy.ts", "consts.ts"]
+  "include": ["_eleventy/**/*.ts", "_eleventy/**/*.tsx", "index.11ty.tsx", "scripts/serve-eleventy.ts", "consts.ts"]
 }

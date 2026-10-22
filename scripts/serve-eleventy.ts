@@ -52,9 +52,12 @@ const watchers = [
   watch("_eleventy", { recursive: true }, scheduleRestart),
   // Watch the directory so atomic-save editors can replace config file inodes.
   watch(".", (_event, filename) => {
-    if (["consts.ts", "eleventy.config.js", "tsconfig.json"].includes(String(filename))) {
+    if (["consts.ts", "eleventy.config.js", "tsconfig.json", "index.11ty.tsx", "_data.yml"].includes(String(filename))) {
       scheduleRestart();
     }
+  }),
+  watch("posts", { recursive: true }, (_event, filename) => {
+    if (String(filename).endsWith(".11tydata.js") || String(filename).endsWith("_data.yml")) scheduleRestart();
   }),
 ];
 

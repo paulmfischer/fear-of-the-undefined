@@ -1,5 +1,7 @@
 # Phase 2 — Eleventy build foundation
 
+Historical phase 2 record. [Phase 3](eleventy-phase3.md) now builds all pages and extends the layout/data/watch configuration; use that document for the current preview scope.
+
 ## Scope
 
 The phase 2 build intentionally renders only the existing XUnit Markdown article using a minimal shared TSX layout and imported header component. It does not yet reproduce the full site. The source article and legacy Lume templates/configuration are unchanged.
