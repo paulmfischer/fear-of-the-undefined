@@ -17,11 +17,11 @@
   - [x] Record live navigation, theme, search, feed, and missing-page behavior.
   - [x] Generate an isolated Lume baseline if the runtime is available; document blockers otherwise.
   - [x] Record baseline discrepancies and existing text-version URLs separately.
-- [ ] Phase 2 — Establish the Eleventy build
-  - [ ] Select and pin supported Node/Eleventy versions and commit a dependency lockfile.
-  - [ ] Configure ESM, TSX loading, static rendering, and TypeScript checking.
-  - [ ] Add build/serve/type-check commands and verify one Markdown article through the shared layout.
-  - [ ] Verify layout/component changes trigger development rebuilds.
+- [x] Phase 2 — Establish the Eleventy build
+  - [x] Select and pin supported Node/Eleventy versions and commit a dependency lockfile.
+  - [x] Configure ESM, TSX loading, static rendering, and TypeScript checking.
+  - [x] Add build/serve/type-check commands and verify one Markdown article through the shared layout.
+  - [x] Verify layout/component changes trigger development rebuilds.
 - [ ] Phase 3 — Port content and presentation
   - [ ] Map global/directory data, post collections, dates, categories, tags, and permalinks.
   - [ ] Port the main/article layouts and shared components using explicit TSX imports and typed props.
@@ -54,3 +54,4 @@ Phases 1–5 complete the initial migration. All current HTML pages and assets r
 
 - 2026-10-22: Plan recorded before implementation. Baseline inspection is the first work item; no generator changes yet.
 - 2026-10-22: Phase 1 complete. See [baseline inventory, findings, and screenshots](docs/eleventy-baseline/README.md). Isolated Lume builds passed; 39 non-search-index resources returned HTTP 200 on production; mobile navigation, theme persistence, search, and custom 404 smoke checks passed. UTC formatting is needed to preserve production dates. Existing mobile overlap and Cloudflare HTML injection are recorded. Phase 2 has not started.
+- 2026-10-22: Phase 2 complete. See [setup, limitations, and verification](docs/eleventy-phase2.md). Eleventy 3.1.7 on Node 22.23.4 renders the existing XUnit article through TSX into isolated `_site-eleventy` output. Clean install, build, type checking, browser rendering, and watched Markdown/component/layout/helper changes passed. A built-in Node supervisor avoids stale imported TSX modules. Phase 3 has not started; production/CI remain unchanged.

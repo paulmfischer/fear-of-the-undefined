@@ -1,0 +1,21 @@
+{
+  "name": "fear-of-the-undefined",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "22.23.4" },
+  "scripts": {
+    "build": "eleventy --config=eleventy.config.js",
+    "serve": "node --import tsx scripts/serve-eleventy.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.7",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}
