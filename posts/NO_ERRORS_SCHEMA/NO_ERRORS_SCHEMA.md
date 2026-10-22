@@ -1,6 +1,6 @@
 ---
 title: Angular - Utilizing NO_ERRORS_SCHEMA in tests
-layout: layouts/posts.tsx
+layout: layouts/article.11ty.tsx
 url: './index.html'
 date: 2024-03-28T05:00:00Z
 categories:

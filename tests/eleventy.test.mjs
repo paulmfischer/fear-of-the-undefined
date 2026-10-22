@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { formatDate } from "../_eleventy/helpers/dates.ts";
 import { postPermalink } from "../_eleventy/helpers/permalinks.ts";
 import { parseHTML, DOMParser } from "linkedom";
 import sharp from "sharp";
 
-const output = new URL("../_site-eleventy/", import.meta.url);
+const output = new URL("../_site/", import.meta.url);
 const html = path => readFile(new URL(path, output), "utf8");
 const posts = [
   "more-thoughts-on-ai", "text-versions-of-posts", "generate-todo-with-ai",
@@ -109,4 +109,49 @@ test("sitemap covers the eleven public content pages and robots advertises it", 
   const paths = [...sitemap.querySelectorAll("loc")].map(n => decodeURI(new URL(n.textContent).pathname)).sort();
   assert.deepEqual(paths, ["/", "/about-me/", ...posts.map(p => `/posts/${p}/`)].sort());
   assert((await html("robots.txt")).includes("Sitemap: https://paulmfischer.dev/sitemap.xml"));
+});
+
+test("legacy text URLs temporarily redirect to the corresponding HTML articles", async () => {
+  const rules = (await html("_redirects")).trim().split("\n");
+  for (const post of posts) {
+    const url = encodeURI(`/posts/${post}/`);
+    assert(rules.includes(`${url}index.txt ${url} 302`));
+    assert(rules.includes(`${url}/index.txt ${url} 302`));
+  }
+  assert(rules.includes('/posts/github-actions[bot]-denied/index.txt /posts/github-actions%5Bbot%5D-denied/ 302'));
+  assert.equal(rules.length, 20);
+});
+
+test("all generated internal links, images, scripts and fragment targets resolve", async () => {
+  const redirects = new Map((await html("_redirects")).trim().split("\n").map(line => line.split(" ").slice(0, 2)));
+  const files = (await readdir(output, { recursive: true })).filter(path => path.endsWith(".html"));
+  for (const path of files) {
+    const { document } = parseHTML(await html(path));
+    const base = new URL(path.replace(/index\.html$/, ""), "https://paulmfischer.dev/");
+    for (const element of document.querySelectorAll("[href], [src]")) {
+      for (const attr of ["href", "src"]) {
+        const value = element.getAttribute(attr);
+        if (!value) continue;
+        const target = new URL(value, base);
+        if (target.origin !== base.origin) continue;
+        if (redirects.has(target.pathname)) target.pathname = redirects.get(target.pathname);
+        let destination = decodeURI(target.pathname).slice(1);
+        let found = false;
+        const candidates = destination ? [destination, `${destination}.html`, `${destination.replace(/\/$/, "")}/index.html`] : ["index.html"];
+        for (const candidate of candidates) {
+          try {
+            if (!(await stat(new URL(candidate, output))).isFile()) continue;
+            if (target.hash && candidate.endsWith(".html")) {
+              const targetDoc = parseHTML(await html(candidate)).document;
+              assert(targetDoc.getElementById(decodeURIComponent(target.hash.slice(1))), `${path}: missing ${value}`);
+            }
+            found = true; break;
+          } catch (error) {
+            if (error.code !== "ENOENT" && error.code !== "ENOTDIR") throw error;
+          }
+        }
+        assert(found, `${path}: missing ${value}`);
+      }
+    }
+  }
 });

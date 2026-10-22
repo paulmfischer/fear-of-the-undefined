@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
+import { readFile, writeFile, mkdir, rm, readdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import postcss from "postcss";
 import tailwind from "@tailwindcss/postcss";
@@ -9,7 +9,7 @@ import { parseHTML } from "linkedom";
 import * as pagefind from "pagefind";
 import { siteOptions } from "../../consts.ts";
 
-interface BuildResult { url: string; content: string; inputPath: string }
+interface BuildResult { url: string; content: string; inputPath: string; outputPath: string }
 
 async function buildStyles(output: string, results: BuildResult[]) {
   // Scan rendered classes so Markdown attributes and computed TSX classes are
@@ -22,14 +22,17 @@ async function buildStyles(output: string, results: BuildResult[]) {
     }
   }
   const source = (await readFile("styles.css", "utf8"))
-    .replace('"styles/code-highlight.css"', '"./_includes/styles/code-highlight.css"')
     .replace('"tailwindcss"', '"tailwindcss" source(none)')
     + `\n@source inline(${JSON.stringify([...classes].join(" "))});\n`;
   const css = await postcss([tailwind({ optimize: false })]).process(source, { from: resolve("styles.css") });
   await writeFile(join(output, "styles.css"), transform({ filename: "styles.css", code: Buffer.from(css.css), minify: true }).code);
 }
 
-export async function buildAssets(output: string) {
+export async function buildAssets(output: string, clean = true) {
+  // Clean on process startup. Native watch rebuilds retain Eleventy's cached
+  // directories; obsolete HTML is pruned below and asset changes restart cleanly.
+  if (resolve(output) !== resolve("_site")) throw new Error("Refusing to clean an unexpected output directory");
+  if (clean) await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
   const avatar = "assets/img/avatar-150x150.png";
   await sharp(avatar).resize(180, 180).png().toFile(join(output, "apple-touch-icon.png"));
@@ -52,6 +55,13 @@ function xml(value: string): string {
 }
 
 export async function buildPublishing(output: string, results: BuildResult[]) {
+  const currentPages = new Set(results.map(result => resolve(result.outputPath)));
+  currentPages.add(resolve(output, "posts/generate-todo-with-ai/gpt-todo.html"));
+  for (const path of await readdir(output, { recursive: true })) {
+    if (path.endsWith(".html") && !currentPages.has(resolve(output, path))) {
+      await rm(join(output, path), { force: true });
+    }
+  }
   await buildStyles(output, results);
   const feed = new Feed({
     id: siteOptions.baseUrl, title: siteOptions.title, description: siteOptions.description,
@@ -84,6 +94,16 @@ export async function buildPublishing(output: string, results: BuildResult[]) {
   const urls = results.filter(r => r.url !== "/404.html").map(r => absolute(r.url));
   await writeFile(join(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url => `<url><loc>${xml(url)}</loc></url>`).join("")}</urlset>`);
   await writeFile(join(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${absolute("/sitemap.xml")}\n`);
+  // Keep old text links usable while text generation is deferred. Temporary
+  // redirects can be removed when text companions return without a permanent cache.
+  const redirects = articles.flatMap(result => {
+    const url = new URL(absolute(result.url)).pathname;
+    const textUrl = url.endsWith("/") ? `${url}index.txt` : url.replace(/\.html$/, ".txt");
+    return [textUrl, decodeURI(textUrl)].flatMap(source => [
+      `${source} ${url} 302`, `${source.replace(/\/index\.txt$/, "//index.txt")} ${url} 302`,
+    ]);
+  });
+  await writeFile(join(output, "_redirects"), [...new Set(redirects)].join("\n") + "\n");
 
   // Index articles and About from final HTML; navigation, listing, 404 and demo are excluded.
   await rm(join(output, "pagefind"), { recursive: true, force: true });

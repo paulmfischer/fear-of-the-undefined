@@ -1,6 +1,6 @@
 ---
 title: Moving to Cloudflare Pages from Deno Deploy
-layout: layouts/posts.tsx
+layout: layouts/article.11ty.tsx
 url: './index.html'
 date: 2025-05-20T05:00:00Z
 categories:

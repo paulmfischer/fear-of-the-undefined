@@ -1,5 +1,7 @@
 # Phase 4 — Styled blog and publishing features
 
+Historical phase 4 record. [Phase 5](../eleventy-phase5.md) now uses `_site`, documents final cleanup/redirect behavior, and supersedes the preview state below.
+
 The Eleventy preview is ready for the planned user testing pass. Production, CI, and the legacy Lume setup remain unchanged. Output is still isolated in `_site-eleventy`.
 
 ## Preview and review

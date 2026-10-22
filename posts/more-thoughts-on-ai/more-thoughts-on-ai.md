@@ -1,6 +1,6 @@
 ---
 title: More Thoughts on AI
-layout: layouts/posts.tsx
+layout: layouts/article.11ty.tsx
 url: './index.html'
 date: 2026-04-20T05:00:00Z
 categories:

@@ -1,8 +1,8 @@
 import { watch } from "node:fs";
 import { spawn, type ChildProcess } from "node:child_process";
 
-// Eleventy's Markdown watcher can rebuild in-process. Imported TSX modules need
-// a fresh process: clearing only the template cache leaves ESM imports stale.
+// A fresh process avoids stale ESM/template caches and handles source deletions.
+// The server restarts after a short debounce; all output is rebuilt cleanly.
 let child: ChildProcess | undefined;
 let restartRequested = false;
 let stopping = false;
@@ -13,7 +13,7 @@ function start() {
     "node_modules/@11ty/eleventy/cmd.cjs",
     "--config=eleventy.config.js",
     "--serve",
-    "--port=8080",
+    `--port=${process.env.PREVIEW_PORT ?? "8080"}`,
   ], { stdio: "inherit" });
 
   child.on("error", (error) => {
@@ -50,16 +50,17 @@ function scheduleRestart() {
 
 const watchers = [
   watch("_eleventy", { recursive: true }, scheduleRestart),
-  watch("_includes/styles", { recursive: true }, scheduleRestart),
+  watch("assets", { recursive: true }, scheduleRestart),
+  watch("scripts", (_event, filename) => {
+    if (String(filename).endsWith(".js")) scheduleRestart();
+  }),
   // Watch the directory so atomic-save editors can replace config file inodes.
   watch(".", (_event, filename) => {
-    if (["consts.ts", "eleventy.config.js", "tsconfig.json", "index.11ty.tsx", "_data.yml", "styles.css"].includes(String(filename))) {
+    if (String(filename).endsWith(".md") || ["consts.ts", "eleventy.config.js", "tsconfig.json", "index.11ty.tsx", "_data.yml", "styles.css", "favicon.svg", "PaulFischerResume.pdf"].includes(String(filename))) {
       scheduleRestart();
     }
   }),
-  watch("posts", { recursive: true }, (_event, filename) => {
-    if (String(filename).endsWith(".11tydata.js") || String(filename).endsWith("_data.yml")) scheduleRestart();
-  }),
+  watch("posts", { recursive: true }, scheduleRestart),
 ];
 
 function shutdown(code: number) {

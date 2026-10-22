@@ -1,4 +1,4 @@
-layout: layouts/main.tsx
+layout: layouts/page.11ty.tsx
 siteTitle: "Fear of the 'undefined'"
 siteDescription: "My thoughts, experiences, and interesting issues I encounter on my journey as a developer."
 author: Paul Fischer

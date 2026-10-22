@@ -14,6 +14,9 @@ export default function (eleventyConfig) {
   // The native dependency scanner parses JavaScript, not TypeScript. The serve
   // supervisor already restarts for imported TS/TSX and data-file changes.
   eleventyConfig.setWatchJavaScriptDependencies(false);
+  // npm run serve owns watching, including deletions. Restarting avoids stale
+  // template/output-directory caches and lets every preview build start cleanly.
+  eleventyConfig.watchIgnores.add("**");
   eleventyConfig.addExtension(["11ty.tsx"], {
     key: "11ty.js",
     compile() {
@@ -24,8 +27,6 @@ export default function (eleventyConfig) {
     },
   });
   eleventyConfig.addTemplateFormats("11ty.tsx");
-  eleventyConfig.addLayoutAlias("layouts/posts.tsx", "layouts/article.11ty.tsx");
-  eleventyConfig.addLayoutAlias("layouts/main.tsx", "layouts/page.11ty.tsx");
   eleventyConfig.addGlobalData("site", () => validateSite(parse(readFileSync("_data.yml", "utf8"))));
   eleventyConfig.addCollection("posts", (collection) =>
     collection.getFilteredByTag("post").sort((a, b) => b.date.getTime() - a.date.getTime()),
@@ -48,12 +49,16 @@ export default function (eleventyConfig) {
   for (const path of ["assets", "favicon.svg", "PaulFischerResume.pdf", "scripts/search.js", "scripts/toggle-sidebar.js", "scripts/toggle-theme.js", "posts/**/*.{png,jpg,jpeg,gif,webp,svg}", "posts/generate-todo-with-ai/gpt-todo.html"]) {
     eleventyConfig.addPassthroughCopy(path);
   }
-  eleventyConfig.on("eleventy.before", async ({ dir }) => buildAssets(dir.output));
+  let firstBuild = true;
+  eleventyConfig.on("eleventy.before", async ({ dir }) => {
+    await buildAssets(dir.output, firstBuild);
+    firstBuild = false;
+  });
   eleventyConfig.on("eleventy.after", async ({ dir, results }) => buildPublishing(dir.output, results));
   eleventyConfig.addWatchTarget("styles.css");
-  eleventyConfig.addWatchTarget("_includes/styles/code-highlight.css");
+  eleventyConfig.addWatchTarget("_eleventy/styles/code-highlight.css");
   // The serve wrapper restarts on TSX/helper changes to avoid stale ESM modules.
-  // Eleventy's native watcher handles Markdown changes in the input directory.
+  // The supervisor also watches Markdown and copied assets, including deletions.
 
   return {
     templateFormats: ["md", "11ty.tsx"],
@@ -62,7 +67,7 @@ export default function (eleventyConfig) {
     dir: {
       input: ".",
       includes: "_eleventy",
-      output: "_site-eleventy",
+      output: "_site",
     },
   };
 }

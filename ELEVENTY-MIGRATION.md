@@ -33,15 +33,15 @@
   - [x] Restore RSS/JSON feeds and sitemap with existing URLs and equivalent metadata.
   - [x] Run Pagefind against final generated HTML; preserve search annotations and UI.
   - [x] Verify development watching for CSS and generated features.
-- [ ] Phase 5 — Validate and prepare deployment
-  - [ ] Decide existing public text URL handling before deployment (archive, temporary article redirects, or restored generation).
-  - [ ] Compare route/asset manifests against the Lume and live baselines.
-  - [ ] Compare homepage, representative articles, About, and 404 at desktop/mobile widths in both themes.
-  - [ ] Verify content ordering, dates, formatting, code blocks, images, and internal links.
-  - [ ] Exercise navigation, theme persistence, search, and feed/sitemap contents.
-  - [ ] Verify clean production builds and rebuilds after edits/deletions.
-  - [ ] Update CI and contributor instructions; remove obsolete Lume/Deno configuration after parity is verified.
-  - [ ] Review the completed migration before production publication.
+- [x] Phase 5 — Validate and prepare deployment
+  - [x] Decide existing public text URL handling before deployment (user selected temporary article redirects).
+  - [x] Compare route/asset manifests against the Lume and live baselines.
+  - [x] Compare homepage, representative articles, About, and 404 at desktop/mobile widths in both themes.
+  - [x] Verify content ordering, dates, formatting, code blocks, images, and internal links.
+  - [x] Exercise navigation, theme persistence, search, and feed/sitemap contents.
+  - [x] Verify clean production builds and rebuilds after edits/deletions.
+  - [x] Update CI and contributor instructions; remove obsolete Lume/Deno configuration after parity is verified.
+  - [x] Review the completed migration before production publication (prepared only; no push/merge/deployment).
 - [ ] Phase 6 — Stretch goal: text versions
   - [ ] Reassess conversion requirements and port the reusable TypeScript logic.
   - [ ] Generate text companions and restore article links.
@@ -58,3 +58,4 @@ Phases 1–5 complete the initial migration. All current HTML pages and assets r
 - 2026-10-22: Phase 2 complete. See [setup, limitations, and verification](docs/eleventy-phase2.md). Eleventy 3.1.7 on Node 22.23.4 renders the existing XUnit article through TSX into isolated `_site-eleventy` output. Clean install, build, type checking, browser rendering, and watched Markdown/component/layout/helper changes passed. A built-in Node supervisor avoids stale imported TSX modules. Phase 3 has not started; production/CI remain unchanged.
 - 2026-10-22: Phase 3 complete. See [content port and verification](docs/eleventy-phase3.md). All 12 generated page routes and copied content assets are present; Markdown source is unchanged. Five regression groups, type checking, browser smoke checks, and normalized production-content/image comparisons passed. Styling, icons, highlighting, reading times, search, and feeds remain phase 4. Existing text URL handling is explicitly tracked in phase 5 before deployment. Production/CI remain unchanged.
 - 2026-10-22: Phase 4 complete. See [preview instructions, verification, and screenshots](docs/eleventy-phase4/README.md). Styling, icons, code highlighting, reading times, favicons, search, feeds, sitemap, and robots are restored. Eight regression groups, strict application type checks, clean dependency installation, browser checks, and live feed/visual comparisons passed. Temporary watch probes were reverted. The preview is ready for user review; phase 5 and production publication have not started.
+- 2026-10-22: Phase 5 complete. See [final verification and release state](docs/eleventy-phase5.md). Node-only clean install/type checking, ten generated-site tests, and the isolated clean/watch lifecycle test passed. All 39 baseline resources and actual local Cloudflare 302/404 behavior were verified; sixteen viewport/theme combinations and all article content/images/feed identities were compared with live. User selected temporary text-to-HTML redirects. CI/README and `_site` output are ready; obsolete Lume/Deno build files were removed and converter source archived. Nothing was pushed, merged, or deployed. Phase 6 remains deferred.

@@ -1,6 +1,6 @@
 ---
 title: Automapper PreCondition
-layout: layouts/posts.tsx
+layout: layouts/article.11ty.tsx
 url: './index.html'
 date: 2024-10-17T05:00:00Z
 categories:
