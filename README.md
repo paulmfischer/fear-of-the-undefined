@@ -4,7 +4,7 @@ My developer blog at [paulmfischer.dev](https://paulmfischer.dev), built with El
 
 ## Develop locally
 
-Use Node **22.23.4** (pinned in `.nvmrc`):
+Use Node **24.22.1** (pinned in `.nvmrc`):
 
 ```sh
 nvm use
