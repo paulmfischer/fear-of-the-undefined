@@ -104,14 +104,10 @@ export async function buildPublishing(output: string, results: BuildResult[]) {
     await mkdir(resolve(destination, ".."), { recursive: true });
     await writeFile(destination, articleText(result.content, absolute(result.url), siteOptions.author, tags));
   }
-  // Only historical double-slash links need redirects now; canonical text URLs
-  // are real assets and must never redirect to HTML.
-  const redirects = articles.flatMap(result => {
-    const url = new URL(absolute(textUrl(result.url))).pathname;
-    return url.endsWith("/index.txt") ? [...new Set([url, decodeURI(url)])].map(source =>
-      `${source.replace(/\/index\.txt$/, "//index.txt")} ${url} 302`) : [];
-  });
-  await writeFile(join(output, "_redirects"), [...new Set(redirects)].join("\n") + "\n");
+  // Cloudflare normalizes repeated slashes, including in redirect sources.
+  // A //index.txt -> /index.txt rule therefore redirects canonical URLs to
+  // themselves. Serve text assets directly and let Cloudflare normalize old links.
+  await rm(join(output, "_redirects"), { force: true });
 
   // Index articles and About from final HTML; navigation, listing, 404 and demo are excluded.
   await rm(join(output, "pagefind"), { recursive: true, force: true });
