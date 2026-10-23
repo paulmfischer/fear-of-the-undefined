@@ -1,6 +1,6 @@
 ---
 title: github-actions[bot] denied access to repo
-layout: layouts/posts.tsx
+layout: layouts/article.tsx
 url: './index.html'
 date: 2022-05-10T05:00:00Z
 categories:

@@ -1,6 +1,6 @@
 ---
 title: XUnit Testing with TheoryData
-layout: layouts/posts.tsx
+layout: layouts/article.tsx
 url: './index.html'
 date: 2025-02-13T05:00:00Z
 categories:

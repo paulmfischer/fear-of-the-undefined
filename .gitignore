@@ -2,9 +2,13 @@
 .*
 !.git*
 !.editorconfig
+!.nvmrc
 
 # bundler cache
 _site
 _cache
 _vendor
+node_modules/
+_site-eleventy/
+docs/
 

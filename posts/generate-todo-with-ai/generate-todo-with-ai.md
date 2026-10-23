@@ -1,6 +1,6 @@
 ---
 title: Generate a Todo app using AI
-layout: layouts/posts.tsx
+layout: layouts/article.tsx
 url: './index.html'
 date: 2025-09-14T05:00:00Z
 categories:

@@ -1,19 +1,75 @@
-Hello! And welcome to my blog website codebase, have a look around and see the sights!
+# Fear of the 'undefined'
 
-Things can change here and quickly sometimes, all just depends on what is going on in my life and if I feel like tinkering with another blogging engine to scratch some itch.
+My developer blog at [paulmfischer.dev](https://paulmfischer.dev), built with Eleventy and hosted on Cloudflare Pages. Posts are Markdown; layouts/components are TSX rendered to static HTML; helpers are TypeScript. React is used only during the build.
 
-That itch currently is to use a static site generator to build out my blog post and host it with [Deno Deploy](https://deno.com/deploy).  I am currently doing that using [Lume](https://lume.land/) which also lets me utilize [Deno](https://deno.com/) to write components for my blog as well as write all my posts in Markdown.
+## Develop locally
 
-#### Previous blog engines used
-Before March 2024:
-- [Jekyll](https://jekyllrb.com/)
-  - I used [Chirpy](https://github.com/cotes2020/chirpy-starter) as a starting point to using Jekyll.
-  - This worked well and I liked the theme/layout that Chirpy gave me so I tried to replicate it as much as possible with my current redesign.  The problem is that Jekyll uses Ruby and I am not really a Ruby developer so I didn't like digging around or changing things much.
+Use Node **22.23.4** (pinned in `.nvmrc`):
 
-#### If you would like to run my site locally
+```sh
+nvm use
+npm ci
+npm run serve
+```
 
-1. Install [Deno](https://docs.deno.com/runtime/manual)
-2. Clone repo
-3. Run `deno task serve` from root folder
-4. Develop!
+Open http://localhost:8080/. Set `PREVIEW_PORT=8090 npm run serve` if another preview occupies that port. Markdown, asset, TSX, helper, data, and configuration changes restart the preview with a fresh build to avoid stale imports and deleted output. Reload after the brief restart. Ctrl+C stops it.
+
+```sh
+npm run type-check  # Strict checking of application TypeScript/TSX
+npm test            # Build and verify generated routes, links, content, feeds and assets
+npm run test:rebuild # Isolated add/rename/delete and stale-file regression
+npm run build       # Generate the deployable site
+```
+
+The build owns **`_site/`** and cleans it at startup, including watched rebuilds. Do not store authored files there. Use `npm run serve` for development so deletions and renames trigger clean rebuilds. Deno is not required.
+
+## Write a post
+
+Create `posts/my-post/index.md`:
+
+```markdown
+---
+title: My post
+date: 2026-10-22T05:00:00Z
+url: ./index.html
+categories:
+  - dotnet
+tags:
+  - testing
+---
+Write the article here.
+```
+
+Place images beside the Markdown file and link to them with relative paths. The example publishes at `/posts/my-post/`. Standalone files such as `posts/Generic-Component-Blazor.md` also publish to a directory URL. Keep existing URLs when moving or renaming published posts. Dates display in UTC so local and CI builds agree.
+
+Posts inherit their article layout and the `post` collection tag from directory data. YAML front matter may also include `description` and an explicit layout override. Markdown attributes such as `{.text-blue-600}` and generated heading anchors are supported. Code fences specify their language, e.g. `csharp`.
+
+## Project structure
+
+- `index.tsx`: newest-first post listing.
+- `_eleventy/layouts/` and `_eleventy/components/`: shared TSX presentation.
+- `_eleventy/helpers/`: dates, permalinks, reading estimates, assets and publishing output.
+- `_data.yml`: profile/social metadata; `consts.ts`: canonical site/feed settings.
+- `posts/_data.yml` and `posts/posts.data.js`: inherited post data and permalink mapping.
+- `styles.css` and `_eleventy/styles/code-highlight.css`: Tailwind/custom styles and code colors.
+- `scripts/`: browser behavior and the development supervisor.
+- `tests/`: generated-site checks and isolated rebuild regression.
+
+Styles are compiled from rendered classes, including Markdown attributes. Search indexes article/About content after HTML generation. RSS/JSON feeds include the latest ten posts. Favicons derive from the avatar. Copied assets include the résumé and the standalone Todo example.
+
+## Text versions
+
+Each article includes a Text Version link. The build generates a UTF-8 companion at `index.txt` (or `name.txt` for explicit `name.html` permalinks), containing title, ISO UTC date, author, tags and article content. Links and images use absolute URLs; fenced code retains its language and whitespace. Text comes from rendered article HTML, so Markdown extensions and HTML entities are handled consistently. Nested lists, headings and tables use plain-text notation.
+
+Canonical text URLs serve files directly. Generated Cloudflare rules only redirect historical double-slash text links to their canonical text URLs. Eleventy's local server does not emulate these hosting rules. The conversion implementation is `_eleventy/helpers/text.ts`.
+
+## Deployment
+
+GitHub Actions validates pull requests and pushes to `main` using `npm ci`, type checking, site tests, and the rebuild regression. A push to `main` publishes the exact validated `_site` artifact to the existing Cloudflare Pages project. Deployment uses the existing `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and GitHub token secrets. No deployment credentials are needed for local builds.
+
+Pull requests validate the site without publishing. Deployment runs only on pushes to `main` after validation succeeds.
+
+## History
+
+The site previously used Jekyll/Chirpy, then Lume/Deno. The Eleventy migration preserves the existing blog design and Markdown workflow.
 

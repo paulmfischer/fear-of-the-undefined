@@ -1,4 +1,4 @@
-@import "styles/code-highlight.css";
+@import "./_eleventy/styles/code-highlight.css";
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));

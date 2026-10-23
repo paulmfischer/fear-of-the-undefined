@@ -1,6 +1,6 @@
 ---
 title: Text output of Blog posts
-layout: layouts/posts.tsx
+layout: layouts/article.tsx
 url: './index.html'
 date: 2026-01-19T09:35:00Z
 categories:
