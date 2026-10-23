@@ -61,7 +61,7 @@ Styles are compiled from rendered classes, including Markdown attributes. Search
 
 Each article includes a Text Version link. The build generates a UTF-8 companion at `index.txt` (or `name.txt` for explicit `name.html` permalinks), containing title, ISO UTC date, author, tags and article content. Links and images use absolute URLs; fenced code retains its language and whitespace. Text comes from rendered article HTML, so Markdown extensions and HTML entities are handled consistently. Nested lists, headings and tables use plain-text notation.
 
-Canonical text URLs serve files directly. Generated Cloudflare rules only redirect historical double-slash text links to their canonical text URLs. Eleventy's local server does not emulate these hosting rules. The conversion implementation is `_eleventy/helpers/text.ts`.
+Text URLs serve files directly, without custom redirect rules. Cloudflare normalizes historical double-slash text links automatically. Do not add `//index.txt` to `/index.txt` redirects: Cloudflare also normalizes rule sources, making those rules redirect canonical URLs to themselves. The conversion implementation is `_eleventy/helpers/text.ts`.
 
 ## Deployment
 

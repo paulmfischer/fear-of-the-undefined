@@ -112,12 +112,12 @@ test("sitemap covers the eleven public content pages and robots advertises it", 
   assert((await html("robots.txt")).includes("Sitemap: https://paulmfischer.dev/sitemap.xml"));
 });
 
-test("text companions contain article metadata and only doubled-slash URLs redirect", async () => {
-  const rules = (await html("_redirects")).trim().split("\n");
+test("text companions are direct assets without Cloudflare self-redirect rules", async () => {
+  // Cloudflare collapses repeated slashes in redirect sources. Historical
+  // //index.txt rules would also match /index.txt and redirect it to itself.
+  await assert.rejects(html("_redirects"), { code: "ENOENT" });
   for (const post of posts) {
     const url = encodeURI(`/posts/${post}/`);
-    assert(!rules.some(rule => rule.startsWith(`${url}index.txt `)));
-    assert(rules.includes(`${url}/index.txt ${url}index.txt 302`));
     const text = await html(`posts/${post}/index.txt`);
     assert.match(text, /^Title: .+\nDate: \d{4}-\d\d-\d\dT.+Z\nAuthor: Paul Fischer\nTags: /);
     const document = parseHTML(await html(`posts/${post}/index.html`)).document;
@@ -125,8 +125,6 @@ test("text companions contain article metadata and only doubled-slash URLs redir
     for (const code of document.querySelectorAll("#post-content pre code")) assert(text.includes(code.textContent));
     assert(!text.includes('class="hljs'));
   }
-  assert(rules.includes('/posts/github-actions[bot]-denied//index.txt /posts/github-actions%5Bbot%5D-denied/index.txt 302'));
-  assert.equal(rules.length, 10);
 });
 
 test("text conversion preserves blockquote markers, nesting and quoted code", () => {
@@ -151,7 +149,6 @@ test("text conversion preserves code, links, images, entities and nested lists",
 });
 
 test("all generated internal links, images, scripts and fragment targets resolve", async () => {
-  const redirects = new Map((await html("_redirects")).trim().split("\n").map(line => line.split(" ").slice(0, 2)));
   const files = (await readdir(output, { recursive: true })).filter(path => path.endsWith(".html"));
   for (const path of files) {
     const { document } = parseHTML(await html(path));
@@ -162,7 +159,8 @@ test("all generated internal links, images, scripts and fragment targets resolve
         if (!value) continue;
         const target = new URL(value, base);
         if (target.origin !== base.origin) continue;
-        if (redirects.has(target.pathname)) target.pathname = redirects.get(target.pathname);
+        // Match Cloudflare's normalization for historical double-slash links.
+        target.pathname = target.pathname.replace(/\/{2,}/g, "/");
         let destination = decodeURI(target.pathname).slice(1);
         let found = false;
         const candidates = destination ? [destination, `${destination}.html`, `${destination.replace(/\/$/, "")}/index.html`] : ["index.html"];
