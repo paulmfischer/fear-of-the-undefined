@@ -1,6 +1,6 @@
 # Fear of the 'undefined'
 
-Paul Fischer's developer blog at [paulmfischer.dev](https://paulmfischer.dev), built with Eleventy and hosted on Cloudflare Pages. Posts are Markdown; layouts/components are TSX rendered to static HTML; helpers are TypeScript. React is used only during the build.
+My developer blog at [paulmfischer.dev](https://paulmfischer.dev), built with Eleventy and hosted on Cloudflare Pages. Posts are Markdown; layouts/components are TSX rendered to static HTML; helpers are TypeScript. React is used only during the build.
 
 ## Develop locally
 
@@ -67,7 +67,7 @@ Canonical text URLs serve files directly. Generated Cloudflare rules only redire
 
 GitHub Actions validates pull requests and pushes to `main` using `npm ci`, type checking, site tests, and the rebuild regression. A push to `main` publishes the exact validated `_site` artifact to the existing Cloudflare Pages project. Deployment uses the existing `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and GitHub token secrets. No deployment credentials are needed for local builds.
 
-The migration branch itself does not publish. Review and merge are separate from preparing the migration. See [ELEVENTY-MIGRATION.md](ELEVENTY-MIGRATION.md) for phase tracking and verification evidence.
+Pull requests validate the site without publishing. Deployment runs only on pushes to `main` after validation succeeds.
 
 ## History
 
