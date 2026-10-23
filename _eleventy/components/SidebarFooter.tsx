@@ -2,8 +2,8 @@ import type { SiteData } from "../types.ts";
 import { Icon } from "./Icon.tsx";
 
 export function SidebarFooter({ site }: { site: SiteData }) {
-  const iconClass = "w-12 h-12 lg:w-6 lg:h-6 dark:text-slate-400";
-  return <div className="mt-auto mx-auto mb-12 lg:mb-4 flex flex-wrap items-center gap-6 lg:gap-3">
+  const iconClass = "w-6 h-6 dark:text-slate-400";
+  return <div className="mx-auto mt-6 lg:mt-auto mb-4 flex flex-wrap items-center gap-3">
     <button id="toggle-theme" className="cursor-pointer" aria-label="Toggle theme"><Icon id="light-mode-icon" iconName="sun" className={iconClass} /><Icon id="dark-mode-icon" iconName="moon" className={`hidden ${iconClass}`} /></button>
     <div>|</div>
     {[{ href: site.github, name: "github", icon: "brand-github" }, { href: site.linkedin, name: "linkedin", icon: "brand-linkedin" }, { href: site.mastodon, name: "mastodon", icon: "brand-mastodon" }, { href: "/posts.rss", name: "rss", icon: "rss" }].map(link =>

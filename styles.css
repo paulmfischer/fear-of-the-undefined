@@ -19,13 +19,23 @@ a > span:hover {
   }
 
   h2 {
-    font-size: theme('fontSize.3xl');
-    line-height: theme('lineHeight.9');
+    font-size: theme('fontSize.2xl');
+    line-height: theme('lineHeight.8');
+
+    @media (min-width: 1024px) {
+      font-size: theme('fontSize.3xl');
+      line-height: theme('lineHeight.9');
+    }
   }
   
   h3 {
-    font-size: theme('fontSize.2xl');
-    line-height: theme('lineHeight.8');
+    font-size: theme('fontSize.xl');
+    line-height: theme('lineHeight.7');
+
+    @media (min-width: 1024px) {
+      font-size: theme('fontSize.2xl');
+      line-height: theme('lineHeight.8');
+    }
   }
   
   p {
@@ -67,7 +77,7 @@ a > span:hover {
 }
 
 :root {
-  --pagefind-ui-scale: 1.2;
+  --pagefind-ui-scale: 0.8;
   --pagefind-ui-border-width: 2px;
   --pagefind-ui-border-radius: 8px;
   --pagefind-ui-image-border-radius: 8px;
@@ -91,12 +101,5 @@ a > span:hover {
 
   .pagefind-ui__result-link {
     color: theme('colors.blue.400') !important;
-  }
-}
-
-
-@media (min-width: 1024px) {
-  :root {
-    --pagefind-ui-scale: 0.8;
   }
 }

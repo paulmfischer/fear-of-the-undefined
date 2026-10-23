@@ -29,16 +29,16 @@ export function MainLayout({ title, children, site }: MainLayoutProps) {
         <link rel="alternate" type="application/rss+xml" href="/posts.rss" title={`RSS Feed for ${site.siteTitle}`} />
         <link rel="alternate" type="application/feed+json" href="/posts.json" title={`JSON Feed for ${site.siteTitle}`} />
       </head>
-      <body className="text-5xl lg:text-lg text-slate-900 bg-zinc-200 dark:text-slate-300 dark:bg-zinc-800">
+      <body className="text-lg text-slate-900 bg-zinc-200 dark:text-slate-300 dark:bg-zinc-800">
         <div className="max-w-8xl mx-auto lg:px-8"><div className="min-h-screen flex">
-          <div id="sidebar" className="max-w-lg hidden lg:flex flex-col fixed inset-0 h-full lg:max-w-64 bg-zinc-200 dark:bg-zinc-800 z-50">
-            <button id="close-sidebar" aria-label="Close navigation" className="absolute top-10 right-10 lg:hidden"><Icon iconName="x" className="w-12 h-12" /></button>
-            <div className="ml-8 mr-4 lg:mr-2 flex flex-col gap-15 lg:gap-10"><Profile site={site} /><Nav /></div>
+          <div id="sidebar" className="w-80 max-w-full hidden lg:flex flex-col fixed inset-0 h-full overflow-y-auto lg:max-w-64 bg-zinc-200 dark:bg-zinc-800 z-50">
+            <button id="close-sidebar" aria-label="Close navigation" className="absolute top-4 right-4 lg:hidden"><Icon iconName="x" className="w-6 h-6" /></button>
+            <div className="ml-8 mr-4 lg:mr-2 flex flex-col gap-6 lg:gap-10"><Profile site={site} /><Nav /></div>
             <SidebarFooter site={site} />
           </div>
-          <div id="main" className="max-w-full grow flex flex-col lg:pl-56 bg-zinc-100 dark:bg-zinc-900">
+          <div id="main" className="min-w-0 max-w-full grow flex flex-col lg:pl-56 bg-zinc-100 dark:bg-zinc-900">
             <SiteHeader site={site} />
-            <main id="content" className="ml-10 m-5 mr-12 pt-46 lg:pt-0 leading-14 lg:leading-7 text-4xl lg:text-lg" data-pagefind-body>{children}</main>
+            <main id="content" className="m-5 lg:ml-10 lg:mr-12 leading-7 text-lg wrap-anywhere" data-pagefind-body>{children}</main>
             <div className="mt-auto"><Footer site={site} /></div>
           </div>
         </div></div>
